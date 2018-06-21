@@ -9,8 +9,12 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import TextField from '@material-ui/core/TextField';
-// import MyListTree from "./MyListTree";
-
+import { inject, observer } from 'mobx-react';
+import DevTools from 'mobx-react-devtools';
+import MyListStore from "../stores/MyListStore";
+import MyListTree from "./MyListTree";
+import AddingForm from "./AddingForm";
+// import Counter from "./Counter"
 
 const drawerWidth = 240;
 
@@ -41,26 +45,12 @@ const styles = theme => ({
     toolbar: theme.mixins.toolbar,
 });
 
+@observer
 class ClippedDrawer extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.state={
-            addUrl: ""
-        };
-
-        this.onClickAdd = this.onClickAdd.bind(this);
-        this.handleChangeUrl = this.handleChangeUrl.bind(this);
-    }
-
-    onClickAdd() {
-        if(this.state.addUrl.length) {
-            this.setState({addUrl: ""});
-        }
-    }
-    handleChangeUrl(e) {
-        this.setState({addUrl: e.target.value});
-    }
+    static propTypes = {
+        classes: PropTypes.object.isRequired,
+    };
 
     render() {
         const { classes } = this.props;
@@ -71,19 +61,7 @@ class ClippedDrawer extends React.Component {
                     <Typography variant="title" color="inherit" noWrap className={classes.flex}>
                         mjolnir
                     </Typography>
-                    <form className={classes.container} noValidate autoComplete="off">
-                        <TextField
-                            id="url"
-                            label="URL of mylist"
-                            // className={classes.textField}
-                            value={this.state.addUrl}
-                            onChange={this.handleChangeUrl}
-                            margin="normal"
-                        />
-                        <IconButton color="inherit" aria-label="Add" onClick={this.onClickAdd} >
-                            <AddCircleOutlineIcon />
-                        </IconButton>
-                    </form>
+                    <AddingForm />
                 </Toolbar>
             </AppBar>
             <Drawer
@@ -93,20 +71,17 @@ class ClippedDrawer extends React.Component {
                 }}
             >
                 <div className={classes.toolbar} />
-                {/*<MyListTree items={[]}/>*/}
+                <MyListTree />
                 <Divider />
             </Drawer>
+            <DevTools />
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <Typography noWrap>{'You think water moves fast? You should see ice.'}</Typography>
+                <Typography noWrap>{'main'}</Typography>
             </main>
         </div>
     }
 }
-
-ClippedDrawer.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(ClippedDrawer);
 
