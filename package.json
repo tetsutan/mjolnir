@@ -13,6 +13,8 @@
     "start": "npm-run-all --parallel build serve"
   },
   "devDependencies": {
+    "@rgrove/parse-xml": "^1.1.1",
+    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",

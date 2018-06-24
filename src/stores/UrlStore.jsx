@@ -15,7 +15,7 @@ const UrlStore = types.model({
 
 }))
     .actions(self => {
-    function onChange(e) {
+    function handleChange(e) {
         self.url = e.target.value;
     }
 
@@ -23,7 +23,7 @@ const UrlStore = types.model({
         self.url = "";
     }
 
-    return {onChange, clear};
+    return {handleChange, clear};
 });
 
 export default UrlStore;

@@ -13,7 +13,8 @@ export default class AddingForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.onClickAddButton = this.onClickAddButton.bind(this)
+        this.handleClickAddButton = this.handleClickAddButton.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
     static propTypes = {
@@ -21,12 +22,22 @@ export default class AddingForm extends React.Component {
         addingUrl: PropTypes.object.isRequired,
     };
 
-    onClickAddButton() {
+    handleClickAddButton() {
         const { addingUrl, mylists } = this.props;
 
         if(addingUrl.isNicoUrl) {
             mylists.add(addingUrl.url);
             addingUrl.clear()
+        }
+    }
+
+    handleKeyPress(e) {
+        const ENTER = 13;
+        switch(e.which) {
+            case ENTER:
+                e.preventDefault();
+                this.handleClickAddButton();
+                break;
         }
     }
 
@@ -40,10 +51,11 @@ export default class AddingForm extends React.Component {
                 label="URL of mylist"
                 value={addingUrl.url}
                 error={addingUrl.hasError}
-                onChange={addingUrl.onChange}
+                onChange={addingUrl.handleChange}
+                onKeyPress={this.handleKeyPress}
                 margin="normal"
             />
-            <IconButton color="inherit" aria-label="Add" onClick={this.onClickAddButton} >
+            <IconButton color="inherit" aria-label="Add" onClick={this.handleClickAddButton} >
                 <AddCircleOutlineIcon />
             </IconButton>
         </form>

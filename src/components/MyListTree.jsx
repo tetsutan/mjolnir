@@ -37,7 +37,7 @@ class MyListTree extends Component {
                 <List component="nav">
                     {mylists.lists.map(mylist =>
                         <ListItem button>
-                            <ListItemText primary={mylist.url} />
+                            <ListItemText primary={mylist.title} />
                         </ListItem>
                     )}
                 </List>

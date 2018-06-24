@@ -7,7 +7,9 @@ const MyListsStore = types.model({
 })).actions(self => {
 
     function add(url) {
-        self.lists.push(MyListStore.create({url: url}));
+        let mylist = MyListStore.create({url: url});
+        mylist.update();
+        self.lists.push(mylist);
         // async
     }
 
