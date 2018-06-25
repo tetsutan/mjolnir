@@ -24,6 +24,7 @@ const styles = theme => ({
 });
 
 @inject('root')
+@inject('movieIndex')
 @observer
 class MyListTree extends Component {
 
@@ -38,15 +39,14 @@ class MyListTree extends Component {
     }
 
     handleClick(id) {
-        const { root } = this.props;
+        const { root, movieIndex } = this.props;
+        movieIndex.clear();
         root.setShowing(id);
     }
 
     render() {
         const { classes, root } = this.props;
         const { mylists } = root;
-
-
 
         const items = [];
         mylists.lists.forEach(mylist => {

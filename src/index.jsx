@@ -8,6 +8,7 @@ import RootStore from "./stores/RootStore";
 import ErrorStore from "./stores/ErrorStore";
 import {onSnapshot} from "mobx-state-tree";
 import storage from 'electron-json-storage';
+import IndexStore from "./stores/IndexStore";
 
 
 storage.get('state.json', (error, data) => {
@@ -21,12 +22,14 @@ storage.get('state.json', (error, data) => {
                 mylists: MyListsStore.create({lists: {}}),
                 urlStore: UrlStore.create({url: "http://www.nicovideo.jp/mylist/56168136"}),
             }),
+            movieIndex: IndexStore.create(),
             urlStoreError: ErrorStore.create(),
         };
     } else {
         // from state file
         stores = {
             root: RootStore.create(data),
+            movieIndex: IndexStore.create(),
             urlStoreError: ErrorStore.create(),
         }
     }

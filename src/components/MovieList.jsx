@@ -11,10 +11,18 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import ListItem from '@material-ui/core/ListItem';
+
+import ClassNames from 'classnames';
 
 const styles = theme => ({
     card: {
         display: 'flex',
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    cardSelected: {
+        backgroundColor: theme.palette.action.selected,
     },
     details: {
         display: 'flex',
@@ -24,14 +32,18 @@ const styles = theme => ({
         flex: '1 0 auto',
     },
     cover: {
-        minWidth: 320,
-        width: 320,
-        height: 180,
+        minWidth: 200,
+        width: 200,
+        height: 120,
     },
+    list: {
+    }
+
 });
 
 
 @inject('root')
+@inject('movieIndex')
 @observer
 class MovieList extends Component {
 
@@ -43,9 +55,17 @@ class MovieList extends Component {
     constructor(props) {
         super(props);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.selectedClassNames = this.selectedClassNames.bind(this);
     }
 
-    handleDoubleClick(index) {
+    handleClick(e, index) {
+        const { movieIndex } = this.props;
+        movieIndex.set(index);
+    }
+
+    handleDoubleClick(e, index) {
+        e.preventDefault();
 
         const { classes, root } = this.props;
         const { mylists } = root;
@@ -63,8 +83,26 @@ class MovieList extends Component {
 
     }
 
+    selectedClassNames(index) {
+        const { classes, movieIndex } = this.props;
+
+        console.log(index);
+        console.log(movieIndex.index);
+        if(index === movieIndex.index) {
+            return ClassNames({
+                [classes.card]: true,
+                [classes.cardSelected]: true,
+            });
+        }
+
+        return ClassNames({
+            [classes.card]: true,
+        });
+
+    }
+
     render() {
-        const { classes, root } = this.props;
+        const { classes, root, movieIndex } = this.props;
         const { mylists } = root;
         if(!root.showing) {
             return <div>none</div>
@@ -74,27 +112,28 @@ class MovieList extends Component {
 
         return (
             <div>
-                <List component="nav">
+                <List component="nav" className={classes.list}>
 
                     {current.movies.map((movie,index) =>
-                        <Card className={classes.card} key={index} onDoubleClick={() => this.handleDoubleClick(index)}>
-                            <CardMedia
-                                className={classes.cover}
-                                image={movie.thumbnailUrl}
-                            />
-                            <div className={classes.details}>
-                                <CardContent className={classes.content}>
-                                    <Typography variant="body2">{movie.title}</Typography>
-                                    <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
-                                    <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
-                                </CardContent>
-                            </div>
-                        </Card>
-
-
+                        <ListItem key={index}
+                                  onDoubleClick={e => this.handleDoubleClick(e, index)}
+                                  onClick={e => this.handleClick(e, index)}>
+                            <Card className={this.selectedClassNames(index)} >
+                                <CardMedia
+                                    className={classes.cover}
+                                    image={movie.thumbnailUrl}
+                                />
+                                <div className={classes.details}>
+                                    <CardContent className={classes.content}>
+                                        <Typography variant="body2">{movie.title}</Typography>
+                                        <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
+                                        <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
+                                    </CardContent>
+                                </div>
+                            </Card>
+                        </ListItem>
                     )}
                 </List>
-                <Divider />
             </div>
         );
     }

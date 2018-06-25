@@ -1,6 +1,7 @@
 import {types} from "mobx-state-tree"
 import MyListsStore from "./MyListsStore";
 import UrlStore from "./UrlStore";
+import IndexStore from "./IndexStore";
 
 const RootStore = types.model({
     showing: "",
