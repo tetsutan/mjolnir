@@ -9,10 +9,10 @@ const RootStore = types.model({
 
 }).views(self => ({
 })).actions(self => {
-    function setCurrent(index) {
-        self.showing = index;
+    function setShowing(key) {
+        self.showing = key;
     }
-    return {setCurrent}
+    return {setShowing}
 });
 
 export default RootStore;

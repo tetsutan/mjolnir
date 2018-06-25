@@ -5,7 +5,7 @@ import parseXml from '@rgrove/parse-xml'
 import MyListMovieData from "./MyListMovieData";
 
 const axios = axiosBase.create({
-    baseURL: 'http://www.nicovideo.jp', // バックエンドB のURL:port を指定する
+    baseURL: 'http://www.nicovideo.jp',
     headers: {
         'ContentType': 'application/xml',
         'X-Requested-With': 'XMLHttpRequest'
@@ -15,34 +15,36 @@ const axios = axiosBase.create({
 
 
 const MyListStore = types.model({
-    url: "",
-    mylistNumber: types.optional(types.string, ""),
+    id: types.identifier(types.string),
     title: types.optional(types.string, ""),
     movies: types.optional(types.array(MyListMovieData), [])
 }).views(self => ({
+    get url() {
+        return `http://www.nicovideo.jp/mylist/${self.id}`
+    },
 })).actions(self => {
 
     function update() {
-        let uri = url.parse(self.url);
+        // let uri = url.parse(self.url);
+        //
+        // if(uri.hostname === "www.nicovideo.jp") {
+        //     let matches = uri.pathname.match(/mylist\/([0-9]+)/);
+        //     if(matches.length > 1) {
+        //         self.id = matches[1];
+        //     }
+        // }
 
-        if(uri.hostname === "www.nicovideo.jp") {
-            let matches = uri.pathname.match(/mylist\/([0-9]+)/);
-            if(matches.length > 1) {
-                self.mylistNumber = matches[1];
-            }
-        }
 
-
-        if(self.mylistNumber) {
+        if(self.id) {
             self.fetch()
         }
 
     }
 
     function fetch() {
-        if (self.mylistNumber) {
+        if (self.id) {
 
-            axios.get(`/mylist/${self.mylistNumber}?rss=atom`).then(res => {
+            axios.get(`/mylist/${self.id}?rss=atom`).then(res => {
                 let xml = parseXml(res.data);
                 let feed = xml.children[0];
 

@@ -34,9 +34,9 @@ class MyListTree extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(index) {
+    handleClick(id) {
         const { root } = this.props;
-        root.setCurrent(index);
+        root.setShowing(id);
     }
 
     render() {
@@ -46,7 +46,7 @@ class MyListTree extends Component {
         const items = [];
         mylists.lists.forEach(mylist => {
             items.push(
-                <ListItem button onClick={() => this.handleClick(mylist.mylistNumber)} key={mylist.mylistNumber}>
+                <ListItem button onClick={() => this.handleClick(mylist.id)} key={mylist.id}>
                     <ListItemText primary={mylist.title} />
                 </ListItem>
             )

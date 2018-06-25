@@ -4,8 +4,11 @@ import { inject, observer } from 'mobx-react';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import Typography from '@material-ui/core/Typography';
+import Util from "../Util";
 
 @inject('root')
+@inject('urlStoreError')
 @observer
 export default class AddingForm extends React.Component {
 
@@ -20,18 +23,36 @@ export default class AddingForm extends React.Component {
         root: PropTypes.object.isRequired,
     };
 
-    handleClickAddButton() {
-        const { root } = this.props;
+    handleClickAddButton(e) {
+        const { root, urlStoreError } = this.props;
         const { urlStore, mylists } = root;
 
+        if(e){
+            e.preventDefault();
+        }
+
         if(urlStore.isNicoUrl) {
-            mylists.add(urlStore.url);
-            urlStore.clear()
+
+            const url = urlStore.url;
+            const mylistNumber = Util.getMyListNumberFromUrl(url);
+
+            if(mylists.lists.get(mylistNumber)) {
+                // すでにある
+                urlStoreError.set("Already in list");
+                urlStoreError.clearAfter(5);
+                urlStore.clear();
+            } else {
+                mylists.add(mylistNumber);
+                urlStore.clear()
+            }
+
+
         }
     }
 
     handleKeyPress(e) {
         const ENTER = 13;
+
         switch(e.which) {
             case ENTER:
                 e.preventDefault();
@@ -42,8 +63,10 @@ export default class AddingForm extends React.Component {
 
 
     render() {
-        const { root } = this.props;
+        const { root, urlStoreError } = this.props;
         const { urlStore } = root;
+
+        const err = <Typography color="error" disabled={!urlStoreError.hasError}>{urlStoreError.message}</Typography>;
 
         return <form noValidate autoComplete="off">
             <TextField
@@ -58,6 +81,7 @@ export default class AddingForm extends React.Component {
             <IconButton color="inherit" aria-label="Add" onClick={this.handleClickAddButton} >
                 <AddCircleOutlineIcon />
             </IconButton>
+            {err}
         </form>
     }
 }

@@ -84,8 +84,8 @@ class MovieList extends Component {
                             />
                             <div className={classes.details}>
                                 <CardContent className={classes.content}>
-                                    <Typography variant="title">{movie.title}</Typography>
-                                    <Typography variant="subheading" color="textSecondary">{movie.userName}</Typography>
+                                    <Typography variant="body2">{movie.title}</Typography>
+                                    <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
                                     <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
                                 </CardContent>
                             </div>

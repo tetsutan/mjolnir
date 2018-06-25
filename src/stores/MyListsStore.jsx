@@ -6,11 +6,11 @@ const MyListsStore = types.model({
 }).views(self => ({
 })).actions(self => {
 
-    function add(url) {
-        let mylist = MyListStore.create({url: url});
+    function add(id) {
+        let mylist = MyListStore.create({id: id});
         mylist.update();
         // self.lists.push(mylist);
-        self.lists.set(mylist.mylistNumber, mylist)
+        self.lists.set(id, mylist)
         // async
     }
 
