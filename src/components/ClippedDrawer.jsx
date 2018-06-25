@@ -46,6 +46,7 @@ const styles = theme => ({
     toolbar: theme.mixins.toolbar,
 });
 
+@withStyles(styles)
 @observer
 class ClippedDrawer extends React.Component {
 
@@ -85,5 +86,5 @@ class ClippedDrawer extends React.Component {
     }
 }
 
-export default withStyles(styles)(ClippedDrawer);
+export default ClippedDrawer;
 
