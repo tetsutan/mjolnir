@@ -49,7 +49,7 @@ class MovieList extends Component {
 
         const { classes, root } = this.props;
         const { mylists } = root;
-        if(root.showing < 0) {
+        if(!root.showing) {
             return
         }
 
@@ -66,11 +66,12 @@ class MovieList extends Component {
     render() {
         const { classes, root } = this.props;
         const { mylists } = root;
-        if(root.showing < 0) {
+        if(!root.showing) {
             return <div>none</div>
         }
 
         const current = mylists.lists.get(root.showing);
+
         return (
             <div>
                 <List component="nav">

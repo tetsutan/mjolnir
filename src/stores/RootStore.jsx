@@ -3,7 +3,7 @@ import MyListsStore from "./MyListsStore";
 import UrlStore from "./UrlStore";
 
 const RootStore = types.model({
-    showing: -1,
+    showing: "",
     mylists: MyListsStore,
     urlStore: UrlStore,
 

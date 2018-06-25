@@ -43,14 +43,19 @@ class MyListTree extends Component {
         const { classes, root } = this.props;
         const { mylists } = root;
 
+        const items = [];
+        mylists.lists.forEach(mylist => {
+            items.push(
+                <ListItem button onClick={() => this.handleClick(mylist.mylistNumber)} key={mylist.mylistNumber}>
+                    <ListItemText primary={mylist.title} />
+                </ListItem>
+            )
+        });
+
         return (
             <div className={classes.listtree}>
                 <List component="nav">
-                    {mylists.lists.map((mylist, index) =>
-                        <ListItem button onClick={() => this.handleClick(index)} key={index}>
-                            <ListItemText primary={mylist.title} />
-                        </ListItem>
-                    )}
+                    {items}
                 </List>
                 <Divider />
             </div>

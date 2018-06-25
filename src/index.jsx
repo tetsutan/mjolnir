@@ -17,7 +17,7 @@ storage.get('state.json', (error, data) => {
         // new
         stores = {
             root: RootStore.create({
-                mylists: MyListsStore.create({lists: []}),
+                mylists: MyListsStore.create({lists: {}}),
                 urlStore: UrlStore.create({url: "http://www.nicovideo.jp/mylist/56168136"}),
             }),
         };
