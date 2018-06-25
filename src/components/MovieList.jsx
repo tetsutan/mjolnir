@@ -31,14 +31,12 @@ const styles = theme => ({
 });
 
 
-@inject('mylists')
 @inject('root')
 @observer
 class MovieList extends Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        mylists: PropTypes.object.isRequired,
         root: PropTypes.object.isRequired,
     };
 
@@ -49,7 +47,8 @@ class MovieList extends Component {
 
     handleDoubleClick(index) {
 
-        const { classes, root, mylists } = this.props;
+        const { classes, root } = this.props;
+        const { mylists } = root;
         if(root.showing < 0) {
             return
         }
@@ -65,7 +64,8 @@ class MovieList extends Component {
     }
 
     render() {
-        const { classes, root, mylists } = this.props;
+        const { classes, root } = this.props;
+        const { mylists } = root;
         if(root.showing < 0) {
             return <div>none</div>
         }

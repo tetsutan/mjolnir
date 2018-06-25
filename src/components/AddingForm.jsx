@@ -5,8 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
-@inject('mylists')
-@inject('addingUrl')
+@inject('root')
 @observer
 export default class AddingForm extends React.Component {
 
@@ -18,16 +17,16 @@ export default class AddingForm extends React.Component {
     }
 
     static propTypes = {
-        mylists: PropTypes.object.isRequired,
-        addingUrl: PropTypes.object.isRequired,
+        root: PropTypes.object.isRequired,
     };
 
     handleClickAddButton() {
-        const { addingUrl, mylists } = this.props;
+        const { root } = this.props;
+        const { urlStore, mylists } = root;
 
-        if(addingUrl.isNicoUrl) {
-            mylists.add(addingUrl.url);
-            addingUrl.clear()
+        if(urlStore.isNicoUrl) {
+            mylists.add(urlStore.url);
+            urlStore.clear()
         }
     }
 
@@ -43,15 +42,16 @@ export default class AddingForm extends React.Component {
 
 
     render() {
-        const { addingUrl } = this.props;
+        const { root } = this.props;
+        const { urlStore } = root;
 
         return <form noValidate autoComplete="off">
             <TextField
                 id="url"
                 label="URL of mylist"
-                value={addingUrl.url}
-                error={addingUrl.hasError}
-                onChange={addingUrl.handleChange}
+                value={urlStore.url}
+                error={urlStore.hasError}
+                onChange={urlStore.handleChange}
                 onKeyPress={this.handleKeyPress}
                 margin="normal"
             />

@@ -1,8 +1,12 @@
 import {types} from "mobx-state-tree"
-import MyListStore from "./MyListStore";
+import MyListsStore from "./MyListsStore";
+import UrlStore from "./UrlStore";
 
 const RootStore = types.model({
-    showing: -1
+    showing: -1,
+    mylists: MyListsStore,
+    urlStore: UrlStore,
+
 }).views(self => ({
 })).actions(self => {
     function setCurrent(index) {

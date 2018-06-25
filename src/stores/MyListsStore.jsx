@@ -2,7 +2,7 @@ import {types} from "mobx-state-tree"
 import MyListStore from "./MyListStore";
 
 const MyListsStore = types.model({
-    lists: types.array(MyListStore)
+    lists: types.array(MyListStore),
 }).views(self => ({
 })).actions(self => {
 

@@ -20,14 +20,12 @@ const styles = theme => ({
     },
 });
 
-@inject('mylists')
 @inject('root')
 @observer
 class MyListTree extends Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        mylists: PropTypes.object.isRequired,
         root: PropTypes.object.isRequired,
     };
 
@@ -42,7 +40,8 @@ class MyListTree extends Component {
     }
 
     render() {
-        const { classes, mylists } = this.props;
+        const { classes, root } = this.props;
+        const { mylists } = root;
 
         return (
             <div className={classes.listtree}>
