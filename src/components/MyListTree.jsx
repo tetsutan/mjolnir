@@ -18,6 +18,9 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
         overflow: "scroll",
     },
+    active: {
+        backgroundColor: theme.palette.action.selected
+    }
 });
 
 @inject('root')
@@ -43,10 +46,13 @@ class MyListTree extends Component {
         const { classes, root } = this.props;
         const { mylists } = root;
 
+
+
         const items = [];
         mylists.lists.forEach(mylist => {
+            const className = root.showing === mylist.id ? classes.active : "";
             items.push(
-                <ListItem button onClick={() => this.handleClick(mylist.id)} key={mylist.id}>
+                <ListItem button onClick={() => this.handleClick(mylist.id)} key={mylist.id} className={className}>
                     <ListItemText primary={mylist.title} />
                 </ListItem>
             )
