@@ -6,9 +6,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import TextField from '@material-ui/core/TextField';
+
 import { inject, observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 import MyListStore from "../stores/MyListStore";
@@ -73,6 +73,7 @@ class ClippedDrawer extends React.Component {
                 }}
             >
                 <div className={classes.toolbar} />
+
                 <MyListTree />
                 <Divider />
             </Drawer>

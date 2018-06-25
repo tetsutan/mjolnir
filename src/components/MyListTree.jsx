@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
+import ListIcon from '@material-ui/icons/List';
+import CachedIcon from '@material-ui/icons/Cached';
 
+import ClassNames from 'classnames';
 
 
 
@@ -17,6 +22,9 @@ const styles = theme => ({
         maxWidth: 360,
         backgroundColor: theme.palette.background.paper,
         overflow: "scroll",
+    },
+    listItem: {
+        padding: 15,
     },
     active: {
         backgroundColor: theme.palette.action.selected
@@ -36,7 +44,7 @@ class MyListTree extends Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        this.handleReloadClick = this.handleReloadClick.bind(this);
     }
 
     handleClick(id) {
@@ -45,8 +53,14 @@ class MyListTree extends Component {
         root.setShowing(id);
     }
 
-    handleDoubleClick(mylist) {
-        mylist.update();
+    handleReloadClick() {
+        const { classes, root } = this.props;
+        const { mylists } = root;
+
+        mylists.lists.forEach(mylist => {
+            mylist.update();
+        });
+
     }
 
     render() {
@@ -55,13 +69,24 @@ class MyListTree extends Component {
 
         const items = [];
         mylists.lists.forEach(mylist => {
-            const className = root.showing === mylist.id ? classes.active : "";
+
+            const className = ClassNames({
+                [classes.listItem]: true,
+                [classes.active]: root.showing === mylist.id,
+            });
+
+            const updateView = mylist.updating ? <div>updating</div> : "";
+
             items.push(
                 <ListItem button key={mylist.id} className={className}
                           onClick={() => this.handleClick(mylist.id)}
-                          onDoubleClick={() => this.handleDoubleClick(mylist)}
+                          onDoubleClick={() => mylists.update()}
                 >
-                    <ListItemText primary={mylist.title} />
+                    <ListItemText primary={mylist.title} secondary={mylist.author}
+                                  primaryTypographyProps={{variant: "body2", color: "inherit"}}
+                                  secondaryTypographyProps={{variant: "caption"}}
+                    />
+                    {updateView}
                 </ListItem>
             )
         });
@@ -69,6 +94,13 @@ class MyListTree extends Component {
         return (
             <div className={classes.listtree}>
                 <List component="nav">
+                    <ListItem>
+                        <ListItemText primary="My List" />
+                        <IconButton className={classes.button} aria-label="reload" onClick={this.handleReloadClick}>
+                            <CachedIcon />
+                        </IconButton>
+                    </ListItem>
+                    <Divider />
                     {items}
                 </List>
                 <Divider />

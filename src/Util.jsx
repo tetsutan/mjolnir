@@ -14,6 +14,22 @@ const Util = {
         }
 
         return "";
+    },
+
+    xmlGetFirst: function(el, name) {
+        return el.children.find((el) => {
+            return el.type === "element" && el.name === name
+        });
+    },
+
+    xmlGetFirstChildrenText: function(el, name) {
+        let targetEl = el.children.find((el) => {
+            return el.type === "element" && el.name === name
+        });
+
+        if (targetEl) {
+            return targetEl.children[0].text
+        }
     }
 
 };

@@ -3,6 +3,7 @@ import url from 'url';
 import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
 import MyListMovieData from "./MyListMovieData";
+import Util from '../Util'
 
 const axios = axiosBase.create({
     baseURL: 'http://www.nicovideo.jp',
@@ -17,7 +18,9 @@ const axios = axiosBase.create({
 const MyListStore = types.model({
     id: types.identifier(types.string),
     title: types.optional(types.string, ""),
-    movies: types.optional(types.array(MyListMovieData), [])
+    author: "",
+    movies: types.optional(types.array(MyListMovieData), []),
+    updating: false
 }).views(self => ({
     get url() {
         return `http://www.nicovideo.jp/mylist/${self.id}`
@@ -25,16 +28,6 @@ const MyListStore = types.model({
 })).actions(self => {
 
     function update() {
-        // let uri = url.parse(self.url);
-        //
-        // if(uri.hostname === "www.nicovideo.jp") {
-        //     let matches = uri.pathname.match(/mylist\/([0-9]+)/);
-        //     if(matches.length > 1) {
-        //         self.id = matches[1];
-        //     }
-        // }
-
-
         if(self.id) {
             self.fetch()
         }
@@ -42,24 +35,17 @@ const MyListStore = types.model({
     }
 
     function fetch() {
-        if (self.id) {
+        if (self.id && !self.updating) {
+            self.setUpdating(true);
 
             axios.get(`/mylist/${self.id}?rss=atom`).then(res => {
                 let xml = parseXml(res.data);
                 let feed = xml.children[0];
 
-                // title
-                let titleEl = feed.children.find((el) => {
-                    return el.type === "element" && el.name === "title"
-                });
+                self.updateTitle(Util.xmlGetFirstChildrenText(feed, "title"));
 
-                if (titleEl) {
-                    let title = titleEl.children.map((textEl) => {
-                        return textEl.type === "text" ? textEl.text : ""
-                    }).join(" ");
-
-                    self.updateTitle(title)
-                }
+                const authorEl = Util.xmlGetFirst(feed, "author");
+                self.updateAuthor(Util.xmlGetFirstChildrenText(authorEl, "name"));
 
                 // movies
                 const movies = [];
@@ -82,6 +68,7 @@ const MyListStore = types.model({
                 });
 
                 self.updateMovies(movies);
+                self.setUpdating(false);
 
 
             }).catch(e => {
@@ -95,6 +82,10 @@ const MyListStore = types.model({
 
     function updateTitle(title) {
         self.title = normalizeMyListTitle(title);
+    }
+    function updateAuthor(author) {
+        console.log(author);;
+        self.author = author;
     }
 
     function updateMovies(movies) {
@@ -114,6 +105,10 @@ const MyListStore = types.model({
         self.movies = ms
     }
 
+    function setUpdating(b) {
+        self.updating = b;
+    }
+
     // private
     function normalizeMyListTitle(title) {
         // 必ず `マイリスト` が頭につくので消す
@@ -130,7 +125,7 @@ const MyListStore = types.model({
         return title;
     }
 
-    return {update, fetch, updateTitle, updateMovies}
+    return {update, fetch, updateTitle, updateAuthor, updateMovies, setUpdating}
 });
 
 export default MyListStore;

@@ -2,6 +2,7 @@ import {types} from "mobx-state-tree"
 import axiosBase from 'axios';
 import url from 'url';
 import parseXml from '@rgrove/parse-xml'
+import Util from '../Util'
 
 const axios = axiosBase.create({
     baseURL: 'http://ext.nicovideo.jp',
@@ -61,12 +62,12 @@ const MyListMovieData = types.model({
 
                     if(thumbEl && thumbEl.children) {
 
-                        self.updateTitle(xmlGetFirstChildren(thumbEl, "title"));
-                        self.updateThumbnailUrl(xmlGetFirstChildren(thumbEl, "thumbnail_url"));
-                        self.updateUserName(xmlGetFirstChildren(thumbEl, "user_nickname"));
-                        self.updateUserIcon(xmlGetFirstChildren(thumbEl, "user_icon_url"));
-                        self.updateDate(xmlGetFirstChildren(thumbEl, "first_retrieve"));
-                        self.updateDescription(xmlGetFirstChildren(thumbEl, "description"));
+                        self.updateTitle(Util.xmlGetFirstChildrenText(thumbEl, "title"));
+                        self.updateThumbnailUrl(Util.xmlGetFirstChildrenText(thumbEl, "thumbnail_url"));
+                        self.updateUserName(Util.xmlGetFirstChildrenText(thumbEl, "user_nickname"));
+                        self.updateUserIcon(Util.xmlGetFirstChildrenText(thumbEl, "user_icon_url"));
+                        self.updateDate(Util.xmlGetFirstChildrenText(thumbEl, "first_retrieve"));
+                        self.updateDescription(Util.xmlGetFirstChildrenText(thumbEl, "description"));
 
                     }
 
@@ -106,17 +107,6 @@ const MyListMovieData = types.model({
     }
 
     // private
-    function xmlGetFirstChildren(el, name) {
-
-        let targetEl = el.children.find((el) => {
-            return el.type === "element" && el.name === name
-        });
-
-        if (targetEl) {
-            return targetEl.children[0].text
-        }
-    }
-
 
     return {update, fetch, updateTitle, updateThumbnailUrl,
         updateUserName, updateUserIcon, updateDate, updateDescription,
