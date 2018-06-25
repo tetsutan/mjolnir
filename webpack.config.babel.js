@@ -6,7 +6,6 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const outputPath = path.join(__dirname, 'dist');
 
 export default {
-    watch: true,
     target: 'electron-renderer',
     entry: {
         bundle: './src/index.jsx',
