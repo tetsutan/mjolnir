@@ -2,6 +2,7 @@ import {types} from "mobx-state-tree"
 import url from 'url';
 import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
+import MyListMovieData from "./MyListMovieData";
 
 const axios = axiosBase.create({
     baseURL: 'http://www.nicovideo.jp', // バックエンドB のURL:port を指定する
@@ -17,6 +18,7 @@ const MyListStore = types.model({
     url: "",
     mylistNumber: types.optional(types.string, ""),
     title: types.optional(types.string, ""),
+    movies: types.optional(types.array(MyListMovieData), [])
 }).views(self => ({
 })).actions(self => {
 
@@ -44,6 +46,7 @@ const MyListStore = types.model({
                 let xml = parseXml(res.data);
                 let feed = xml.children[0];
 
+                // title
                 let titleEl = feed.children.find((el) => {
                     return el.type === "element" && el.name === "title"
                 });
@@ -56,6 +59,30 @@ const MyListStore = types.model({
                     self.updateTitle(title)
                 }
 
+                // movies
+                const movies = [];
+                feed.children.filter(el => {
+                    return el.type === "element" && el.name === "entry"
+                }).forEach(el => {
+
+                    // title
+                    const linkEl = el.children.find(el2 => {
+                        return el2.type === "element" && el2.name === "link" &&
+                            el2.attributes && el2.attributes.rel === "alternate" && el2.attributes.type === "text/html" &&
+                            el2.attributes.href
+                    });
+
+                    if (linkEl) {
+                        const movieData = MyListMovieData.create({url: linkEl.attributes.href});
+                        movieData.update();
+                        movies.push(movieData);
+                    }
+
+                });
+
+                self.updateMovies(movies);
+
+
             }).catch(e => {
                 console.log(e);
             });
@@ -67,6 +94,10 @@ const MyListStore = types.model({
 
     function updateTitle(title) {
         self.title = normalizeMyListTitle(title);
+    }
+
+    function updateMovies(movies) {
+        self.movies = movies;
     }
 
     // private
@@ -85,7 +116,7 @@ const MyListStore = types.model({
         return title;
     }
 
-    return {update, fetch, updateTitle}
+    return {update, fetch, updateTitle, updateMovies}
 });
 
 export default MyListStore;

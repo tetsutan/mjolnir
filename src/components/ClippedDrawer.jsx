@@ -14,6 +14,7 @@ import DevTools from 'mobx-react-devtools';
 import MyListStore from "../stores/MyListStore";
 import MyListTree from "./MyListTree";
 import AddingForm from "./AddingForm";
+import MovieList from "./MovieList";
 // import Counter from "./Counter"
 
 const drawerWidth = 240;
@@ -78,6 +79,7 @@ class ClippedDrawer extends React.Component {
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Typography noWrap>{'main'}</Typography>
+                <MovieList />
             </main>
         </div>
     }

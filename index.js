@@ -1,6 +1,6 @@
 
 const electron = require('electron');
-const {app, BrowserWindow} = electron;
+const {app, BrowserWindow, ipcMain, shell } = electron;
 
 require('electron-reload')(__dirname);
 
@@ -15,4 +15,9 @@ app.on('ready', () => {
     mainWindow.webContents.openDevTools();
 
 
+});
+
+ipcMain.on('open', (ev, url) => {
+    console.log("main url : " + url);
+    shell.openExternal(url);
 });

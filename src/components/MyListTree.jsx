@@ -12,7 +12,7 @@ import Divider from '@material-ui/core/Divider';
 
 
 const styles = theme => ({
-    root: {
+    listtree: {
         width: '100%',
         maxWidth: 360,
         backgroundColor: theme.palette.background.paper,
@@ -21,22 +21,34 @@ const styles = theme => ({
 });
 
 @inject('mylists')
+@inject('root')
 @observer
 class MyListTree extends Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
         mylists: PropTypes.object.isRequired,
+        root: PropTypes.object.isRequired,
     };
+
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(index) {
+        const { root } = this.props;
+        root.setCurrent(index);
+    }
 
     render() {
         const { classes, mylists } = this.props;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.listtree}>
                 <List component="nav">
-                    {mylists.lists.map(mylist =>
-                        <ListItem button>
+                    {mylists.lists.map((mylist, index) =>
+                        <ListItem button onClick={() => this.handleClick(index)} key={index}>
                             <ListItemText primary={mylist.title} />
                         </ListItem>
                     )}
