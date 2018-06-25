@@ -22,6 +22,8 @@ const MyListMovieData = types.model({
     date: "",
     description: "",
 
+    watched: false,
+
     // isLargeThumbnail: false, TODO
 }).views(self => ({
 })).actions(self => {
@@ -96,6 +98,13 @@ const MyListMovieData = types.model({
         self.description = v;
     }
 
+    function setWatched() {
+        self.watched = true;
+    }
+    function toggleWatched() {
+        self.watched = !self.watched
+    }
+
     // private
     function xmlGetFirstChildren(el, name) {
 
@@ -110,7 +119,9 @@ const MyListMovieData = types.model({
 
 
     return {update, fetch, updateTitle, updateThumbnailUrl,
-        updateUserName, updateUserIcon, updateDate, updateDescription}
+        updateUserName, updateUserIcon, updateDate, updateDescription,
+        setWatched, toggleWatched,
+    }
 });
 
 export default MyListMovieData;

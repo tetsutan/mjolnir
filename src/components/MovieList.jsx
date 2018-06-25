@@ -57,6 +57,7 @@ class MovieList extends Component {
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.selectedClassNames = this.selectedClassNames.bind(this);
+        this.watchedColor = this.watchedColor.bind(this);
     }
 
     handleClick(e, index) {
@@ -77,6 +78,7 @@ class MovieList extends Component {
         const movie = current.movies.get(index);
 
         if (movie) {
+            movie.setWatched();
             ipcRenderer.send("open", movie.url);
         }
 
@@ -98,6 +100,14 @@ class MovieList extends Component {
         return ClassNames({
             [classes.card]: true,
         });
+
+    }
+
+    watchedColor(movie) {
+        if(movie.watched) {
+            return "textSecondary";
+        }
+        return "primary";
 
     }
 
@@ -125,7 +135,7 @@ class MovieList extends Component {
                                 />
                                 <div className={classes.details}>
                                     <CardContent className={classes.content}>
-                                        <Typography variant="body2">{movie.title}</Typography>
+                                        <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
                                         <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
                                         <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
                                     </CardContent>
