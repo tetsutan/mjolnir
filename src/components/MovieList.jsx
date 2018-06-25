@@ -88,8 +88,6 @@ class MovieList extends Component {
     selectedClassNames(index) {
         const { classes, movieIndex } = this.props;
 
-        console.log(index);
-        console.log(movieIndex.index);
         if(index === movieIndex.index) {
             return ClassNames({
                 [classes.card]: true,

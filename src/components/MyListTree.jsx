@@ -36,12 +36,17 @@ class MyListTree extends Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
     }
 
     handleClick(id) {
         const { root, movieIndex } = this.props;
         movieIndex.clear();
         root.setShowing(id);
+    }
+
+    handleDoubleClick(mylist) {
+        mylist.update();
     }
 
     render() {
@@ -52,7 +57,10 @@ class MyListTree extends Component {
         mylists.lists.forEach(mylist => {
             const className = root.showing === mylist.id ? classes.active : "";
             items.push(
-                <ListItem button onClick={() => this.handleClick(mylist.id)} key={mylist.id} className={className}>
+                <ListItem button key={mylist.id} className={className}
+                          onClick={() => this.handleClick(mylist.id)}
+                          onDoubleClick={() => this.handleDoubleClick(mylist)}
+                >
                     <ListItemText primary={mylist.title} />
                 </ListItem>
             )

@@ -76,7 +76,6 @@ const MyListStore = types.model({
 
                     if (linkEl) {
                         const movieData = MyListMovieData.create({url: linkEl.attributes.href});
-                        movieData.update();
                         movies.push(movieData);
                     }
 
@@ -99,7 +98,20 @@ const MyListStore = types.model({
     }
 
     function updateMovies(movies) {
-        self.movies = movies;
+
+        // 並び順を最新の並び順でとりたい
+        const ms = movies.map(m => {
+            const found = self.movies.find(m2 => m2.url === m.url);
+            console.log(found);
+            if(found) {
+                return found;
+            }
+
+            m.update();
+            return m;
+        });
+
+        self.movies = ms
     }
 
     // private
