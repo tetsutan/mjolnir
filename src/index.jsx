@@ -9,9 +9,14 @@ import ErrorStore from "./stores/ErrorStore";
 import {onSnapshot} from "mobx-state-tree";
 import storage from 'electron-json-storage';
 import IndexStore from "./stores/IndexStore";
+import isDev from 'electron-is-dev';
 
+let stateFileName = 'state.json';
+if (isDev) {
+    stateFileName = 'state.development.json'
+}
 
-storage.get('state.json', (error, data) => {
+storage.get(stateFileName, (error, data) => {
     if (error) throw error;
 
     let stores;
@@ -38,7 +43,7 @@ storage.get('state.json', (error, data) => {
     onSnapshot(stores.root, snapshot => {
         // const dataPath = storage.getDataPath();
         // console.log(dataPath);
-        storage.set('state.json', snapshot, error => {
+        storage.set(stateFileName, snapshot, error => {
             if (error) throw error;
 
 

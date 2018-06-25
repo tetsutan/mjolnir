@@ -16,6 +16,7 @@ import MyListTree from "./MyListTree";
 import AddingForm from "./AddingForm";
 import MovieList from "./MovieList";
 // import Counter from "./Counter"
+import isDev from 'electron-is-dev';
 
 const drawerWidth = 240;
 
@@ -77,7 +78,7 @@ class ClippedDrawer extends React.Component {
                 <MyListTree />
                 <Divider />
             </Drawer>
-            <DevTools />
+            {(() => {if(isDev) {return <DevTools />}})()}
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 <Typography noWrap>{'main'}</Typography>

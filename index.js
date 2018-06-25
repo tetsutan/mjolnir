@@ -1,8 +1,9 @@
 
 const electron = require('electron');
 const {app, BrowserWindow, ipcMain, shell } = electron;
+const isDev = require('electron-is-dev');
 
-require('electron-reload')(__dirname);
+if (isDev) { require('electron-reload')(__dirname) }
 
 let mainWindow;
 
@@ -12,7 +13,7 @@ app.on('ready', () => {
 
     mainWindow.loadURL(`file://${__dirname}/src/index.html`);
 
-    mainWindow.webContents.openDevTools();
+    if (isDev) { mainWindow.webContents.openDevTools(); }
 
 
 });
