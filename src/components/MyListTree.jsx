@@ -21,7 +21,9 @@ const styles = theme => ({
         width: '100%',
         maxWidth: 360,
         backgroundColor: theme.palette.background.paper,
-        overflow: "scroll",
+        overflowY: "scroll",
+        overflowX: "hidden",
+        height: '100vh'
     },
     listItem: {
         padding: 15,

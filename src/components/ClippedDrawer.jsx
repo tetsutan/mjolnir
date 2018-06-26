@@ -27,6 +27,7 @@ const styles = theme => ({
         overflow: 'hidden',
         position: 'relative',
         display: 'flex',
+        height: '100vh',
     },
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
@@ -36,13 +37,18 @@ const styles = theme => ({
     },
     drawerPaper: {
         position: 'relative',
+        overflow: 'hidden',
         width: drawerWidth,
+        height: '100vh'
     },
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit * 3,
         minWidth: 0, // So the Typography noWrap works
+        height: "100vh",
+        overflowY: "scroll",
+        overflowX: "hidden",
     },
     toolbar: theme.mixins.toolbar,
 });
@@ -76,12 +82,10 @@ class ClippedDrawer extends React.Component {
                 <div className={classes.toolbar} />
 
                 <MyListTree />
-                <Divider />
             </Drawer>
             {(() => {if(isDev) {return <DevTools />}})()}
             <main className={classes.content}>
                 <div className={classes.toolbar} />
-                <Typography noWrap>{'main'}</Typography>
                 <MovieList />
             </main>
         </div>
