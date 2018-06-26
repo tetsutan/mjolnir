@@ -18,6 +18,12 @@ import Avatar from "@material-ui/core/Avatar";
 
 
 const styles = theme => ({
+    list: {
+        padding: 0,
+    },
+    listItem: {
+        padding: theme.spacing.unit
+    },
     card: {
         display: 'flex',
         justifyContent: "left",
@@ -28,15 +34,6 @@ const styles = theme => ({
     cardSelected: {
         backgroundColor: theme.palette.action.selected,
     },
-    details: {
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
-    },
-    content: {
-        height: '100%',
-        width: '100%',
-    },
     cover: {
         // 元画像が130x100
         // minWidth: 200,
@@ -44,11 +41,15 @@ const styles = theme => ({
         width: 200,
         height: 150,
     },
-    list: {
-        padding: 0,
+    details: {
+        // overflowWrap: 'break-word',
+        wordBreak: 'break-all',
+        flexDirection: 'column',
+        flex: 1,
     },
-    listItem: {
-        padding: theme.spacing.unit
+    content: {
+        height: '100%',
+        width: '100%',
     },
     author: {
         display: 'flex',
