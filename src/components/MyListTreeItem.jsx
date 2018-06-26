@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
+import {remote} from 'electron'
+
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import ClassNames from 'classnames';
 
-
+const Menu = remote.Menu;
+const MenuItem = remote.MenuItem;
 
 const styles = theme => ({
     listItem: {
@@ -35,6 +38,7 @@ class MyListTreeItem extends Component {
         super(props);
         this.handleClick = this.handleClick.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        this.handleContextMenu = this.handleContextMenu.bind(this);
     }
 
     handleClick(e) {
@@ -46,6 +50,25 @@ class MyListTreeItem extends Component {
     handleDoubleClick(e) {
         const { mylist } = this.props;
         mylist.update();
+    }
+
+    handleContextMenu(e){
+        e.preventDefault();
+        const { root, mylist } = this.props;
+        const { mylists } = root;
+
+        const menu = new Menu();
+        menu.append(new MenuItem({
+            label: 'Remove',
+            click() { mylists.remove(mylist.id) },
+        }));
+        menu.append(new MenuItem({type: 'separator'}));
+        menu.append(new MenuItem({
+            label: 'Refresh',
+            click() { mylist.update() },
+        }));
+
+        menu.popup({window: remote.getCurrentWindow()});
     }
 
 
@@ -64,6 +87,7 @@ class MyListTreeItem extends Component {
             <ListItem button className={className}
                       onClick={this.handleClick}
                       onDoubleClick={this.handleDoubleClick}
+                      onContextMenu={this.handleContextMenu}
             >
                 <ListItemText primary={mylist.title} secondary={mylist.author}
                               primaryTypographyProps={{variant: "body2", color: primaryColor}}

@@ -17,7 +17,11 @@ const MyListsStore = types.model({
         self.lists.set(id, mylist)
     }
 
-    return {add}
+    function remove(id) {
+        self.lists.delete(id)
+    }
+
+    return {add, remove}
 });
 
 export default MyListsStore;
