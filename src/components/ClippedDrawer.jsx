@@ -18,7 +18,7 @@ import MovieList from "./MovieList";
 // import Counter from "./Counter"
 import isDev from 'electron-is-dev';
 
-const drawerWidth = 240;
+const drawerWidth = "25vw";
 
 const styles = theme => ({
     root: {
@@ -44,7 +44,7 @@ const styles = theme => ({
     content: {
         flexGrow: 1,
         backgroundColor: theme.palette.background.default,
-        padding: theme.spacing.unit * 3,
+        padding: theme.spacing.unit,
         minWidth: 0, // So the Typography noWrap works
         height: "100vh",
         overflowY: "scroll",

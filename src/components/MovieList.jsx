@@ -23,6 +23,7 @@ const styles = theme => ({
         justifyContent: "left",
         alignItems: "start",
         width: '100%',
+
     },
     cardSelected: {
         backgroundColor: theme.palette.action.selected,
@@ -39,10 +40,15 @@ const styles = theme => ({
     cover: {
         // 元画像が130x100
         // minWidth: 200,
+        minWidth: 200,
         width: 200,
         height: 150,
     },
     list: {
+        padding: 0,
+    },
+    listItem: {
+        padding: theme.spacing.unit
     },
     author: {
         display: 'flex',
@@ -151,6 +157,7 @@ class MovieList extends Component {
 
                     {current.movies.map((movie,index) =>
                         <ListItem key={index}
+                                  className={classes.listItem}
                                   onDoubleClick={e => this.handleDoubleClick(e, index)}
                                   onClick={e => this.handleClick(e, index)}>
                             <Card className={this.selectedClassNames(index)} >
