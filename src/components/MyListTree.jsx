@@ -78,6 +78,7 @@ class MyListTree extends Component {
             });
 
             const updateView = mylist.updating ? <div>updating</div> : "";
+            const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";
 
             items.push(
                 <ListItem button key={mylist.id} className={className}
@@ -85,7 +86,7 @@ class MyListTree extends Component {
                           onDoubleClick={() => mylists.update()}
                 >
                     <ListItemText primary={mylist.title} secondary={mylist.author}
-                                  primaryTypographyProps={{variant: "body2", color: "inherit"}}
+                                  primaryTypographyProps={{variant: "body2", color: primaryColor}}
                                   secondaryTypographyProps={{variant: "caption"}}
                     />
                     {updateView}

@@ -25,6 +25,9 @@ const MyListStore = types.model({
     get url() {
         return `http://www.nicovideo.jp/mylist/${self.id}`
     },
+    get unwatchCount() {
+        return self.movies.filter(m => !m.watched).length
+    },
 })).actions(self => {
 
     function update() {
