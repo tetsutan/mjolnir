@@ -73,6 +73,8 @@ const MyListStore = types.model({
 
             }).catch(e => {
                 console.log(e);
+                self.updateTitle("Error id=" + self.id);
+                self.setUpdating(false);
             });
 
         }
@@ -113,12 +115,12 @@ const MyListStore = types.model({
     function normalizeMyListTitle(title) {
         // 必ず `マイリスト` が頭につくので消す
         let matches = title.match(/^マイリスト[ ]+(.*)$/);
-        if(matches.length > 1) {
+        if(matches && matches.length > 1) {
             title =  matches[1];
         }
 
         matches = title.match(/^(.*)‐ニコニコ動画$/);
-        if(matches.length > 1) {
+        if(matches && matches.length > 1) {
             title =  matches[1];
         }
 
