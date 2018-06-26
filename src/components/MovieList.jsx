@@ -13,7 +13,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 
-import ClassNames from 'classnames';
+import classNames from 'classnames';
+import Avatar from "@material-ui/core/Avatar";
+
 
 const styles = theme => ({
     card: {
@@ -37,7 +39,19 @@ const styles = theme => ({
         height: 120,
     },
     list: {
-    }
+    },
+    author: {
+        display: 'flex',
+        justifyContent: 'left',
+        alignItems: 'center',
+    },
+
+    smallAvatar: {
+        margin: 5,
+        width: 20,
+        height: 20,
+    },
+
 
 });
 
@@ -91,13 +105,13 @@ class MovieList extends Component {
         const { classes, movieIndex } = this.props;
 
         if(index === movieIndex.index) {
-            return ClassNames({
+            return classNames({
                 [classes.card]: true,
                 [classes.cardSelected]: true,
             });
         }
 
-        return ClassNames({
+        return classNames({
             [classes.card]: true,
         });
 
@@ -140,7 +154,14 @@ class MovieList extends Component {
                                 <div className={classes.details}>
                                     <CardContent className={classes.content}>
                                         <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
-                                        <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
+                                        <div className={classes.author}>
+                                            <Avatar
+                                                alt={movie.userName}
+                                                src={movie.userIcon}
+                                                className={classes.smallAvatar}
+                                            />
+                                            <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
+                                        </div>
                                         <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
                                     </CardContent>
                                 </div>
