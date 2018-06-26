@@ -20,8 +20,9 @@ import Avatar from "@material-ui/core/Avatar";
 const styles = theme => ({
     card: {
         display: 'flex',
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: "left",
+        alignItems: "start",
+        width: '100%',
     },
     cardSelected: {
         backgroundColor: theme.palette.action.selected,
@@ -29,14 +30,17 @@ const styles = theme => ({
     details: {
         display: 'flex',
         flexDirection: 'column',
+        flex: 1,
     },
     content: {
-        flex: '1 0 auto',
+        height: '100%',
+        width: '100%',
     },
     cover: {
-        minWidth: 200,
+        // 元画像が130x100
+        // minWidth: 200,
         width: 200,
-        height: 120,
+        height: 150,
     },
     list: {
     },
@@ -51,6 +55,9 @@ const styles = theme => ({
         width: 20,
         height: 20,
     },
+    date: {
+        marginTop: 20
+    }
 
 
 });
@@ -163,6 +170,10 @@ class MovieList extends Component {
                                             <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
                                         </div>
                                         <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
+                                        <div className={classes.date} >
+                                            <Typography variant="caption" color="textSecondary">{movie.date}</Typography>
+                                        </div>
+
                                     </CardContent>
                                 </div>
                             </Card>

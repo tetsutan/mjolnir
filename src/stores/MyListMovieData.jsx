@@ -3,6 +3,7 @@ import axiosBase from 'axios';
 import url from 'url';
 import parseXml from '@rgrove/parse-xml'
 import Util from '../Util'
+import dateformat from 'dateformat'
 
 const axios = axiosBase.create({
     baseURL: 'http://ext.nicovideo.jp',
@@ -93,7 +94,13 @@ const MyListMovieData = types.model({
         self.userIcon = v;
     }
     function updateDate(v) {
-        self.date = v;
+        const d = Date.parse(v);
+        if(d) {
+            self.date = dateformat(d, 'yyyy/mm/dd HH:MM:ss')
+        } else {
+            self.date = v;
+        }
+
     }
     function updateDescription(v) {
         self.description = v;
