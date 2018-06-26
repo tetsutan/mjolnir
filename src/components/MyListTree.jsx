@@ -7,12 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
-import ListIcon from '@material-ui/icons/List';
 import CachedIcon from '@material-ui/icons/Cached';
 
-import ClassNames from 'classnames';
+import MyListTreeItem from "./MyListTreeItem";
 
 
 
@@ -25,16 +23,9 @@ const styles = theme => ({
         overflowX: "hidden",
         height: '100vh'
     },
-    listItem: {
-        padding: 15,
-    },
-    active: {
-        backgroundColor: theme.palette.action.selected
-    }
 });
 
 @inject('root')
-@inject('movieIndex')
 @observer
 class MyListTree extends Component {
 
@@ -45,14 +36,7 @@ class MyListTree extends Component {
 
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
         this.handleReloadClick = this.handleReloadClick.bind(this);
-    }
-
-    handleClick(id) {
-        const { root, movieIndex } = this.props;
-        movieIndex.clear();
-        root.setShowing(id);
     }
 
     handleReloadClick() {
@@ -70,29 +54,7 @@ class MyListTree extends Component {
         const { mylists } = root;
 
         const items = [];
-        mylists.lists.forEach(mylist => {
-
-            const className = ClassNames({
-                [classes.listItem]: true,
-                [classes.active]: root.showing === mylist.id,
-            });
-
-            const updateView = mylist.updating ? <div>updating</div> : "";
-            const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";
-
-            items.push(
-                <ListItem button key={mylist.id} className={className}
-                          onClick={() => this.handleClick(mylist.id)}
-                          onDoubleClick={() => mylists.update()}
-                >
-                    <ListItemText primary={mylist.title} secondary={mylist.author}
-                                  primaryTypographyProps={{variant: "body2", color: primaryColor}}
-                                  secondaryTypographyProps={{variant: "caption"}}
-                    />
-                    {updateView}
-                </ListItem>
-            )
-        });
+        mylists.lists.forEach(mylist => items.push(<MyListTreeItem key={mylist.id} mylist={mylist} />));
 
         return (
             <div className={classes.listtree}>
