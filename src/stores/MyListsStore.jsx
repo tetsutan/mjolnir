@@ -7,11 +7,14 @@ const MyListsStore = types.model({
 })).actions(self => {
 
     function add(id) {
+
+        if(/^\d+$/.test(id)) {
+            id = `mylist/${id}`
+        }
+
         let mylist = MyListStore.create({id: id});
         mylist.update();
-        // self.lists.push(mylist);
         self.lists.set(id, mylist)
-        // async
     }
 
     return {add}
