@@ -75,11 +75,13 @@ class MovieList extends Component {
         }
 
         const current = mylists.lists.get(root.showing);
-        const movie = current.movies.get(index);
 
-        if (movie) {
-            movie.setWatched();
-            ipcRenderer.send("open", movie.url);
+        if(current) {
+            const movie = current.movies.get(index);
+            if (movie) {
+                movie.setWatched();
+                ipcRenderer.send("open", movie.url);
+            }
         }
 
 
@@ -117,6 +119,10 @@ class MovieList extends Component {
         }
 
         const current = mylists.lists.get(root.showing);
+
+        if(!current) {
+            return <div />
+        }
 
         return (
             <div>
