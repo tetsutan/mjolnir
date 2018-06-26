@@ -15,10 +15,31 @@ app.on('ready', () => {
 
     if (isDev) { mainWindow.webContents.openDevTools(); }
 
+    mainWindow.on('close', (e) => {
+        if (mainWindow) {
+            e.preventDefault();
+            mainWindow.webContents.send('app-close');
+        }
+    });
+
 
 });
+
 
 ipcMain.on('open', (ev, url) => {
     console.log("main url : " + url);
     shell.openExternal(url);
+});
+
+ipcMain.on('closed', e => {
+
+    if(mainWindow) {
+        let w = mainWindow;
+        mainWindow = null;
+        w.close();
+    }
+
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });

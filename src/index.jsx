@@ -1,12 +1,13 @@
 import React from 'react'
 import {render} from 'react-dom'
+import { ipcRenderer } from 'electron'
 import { Provider } from 'mobx-react';
 import App from './components/App.jsx'
 import MyListsStore from './stores/MyListsStore'
 import UrlStore from "./stores/UrlStore";
 import RootStore from "./stores/RootStore";
 import ErrorStore from "./stores/ErrorStore";
-import {onSnapshot} from "mobx-state-tree";
+import {onSnapshot, getSnapshot } from "mobx-state-tree";
 import storage from 'electron-json-storage';
 import IndexStore from "./stores/IndexStore";
 import isDev from 'electron-is-dev';
@@ -38,17 +39,15 @@ storage.get(stateFileName, (error, data) => {
             urlStoreError: ErrorStore.create(),
         }
     }
-
-    // for Debug
-    onSnapshot(stores.root, snapshot => {
-        // const dataPath = storage.getDataPath();
-        // console.log(dataPath);
+    // save state before close
+    ipcRenderer.on("app-close", (ev) => {
+        const snapshot = getSnapshot(stores.root);
         storage.set(stateFileName, snapshot, error => {
             if (error) throw error;
-
-
+            ipcRenderer.send('closed');
         });
     });
+
 
     render(
         <Provider {...stores} >
@@ -58,5 +57,6 @@ storage.get(stateFileName, (error, data) => {
     );
 
 });
+
 
 
