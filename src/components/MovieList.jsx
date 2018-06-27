@@ -102,7 +102,7 @@ class MovieList extends Component {
             return
         }
 
-        const current = mylists.lists.get(root.showing);
+        const current = mylists.get(root.showing);
 
         if(current) {
             const movie = current.movies.get(index);
@@ -146,7 +146,7 @@ class MovieList extends Component {
             return <div>none</div>
         }
 
-        const current = mylists.lists.get(root.showing);
+        const current = mylists.get(root.showing);
 
         if(!current) {
             return <div />
