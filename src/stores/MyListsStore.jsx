@@ -14,6 +14,10 @@ const MyListsStore = types.model({
         return self.lists.has(Util.normalizeMylistId(id_or_url));
     },
 
+    get reverse() {
+        return Array.from(self.lists.values()).reverse()
+    }
+
 })).actions(self => {
 
     function add(id_or_url) {

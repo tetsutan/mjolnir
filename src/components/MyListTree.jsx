@@ -43,7 +43,7 @@ class MyListTree extends Component {
         const { classes, root } = this.props;
         const { mylists } = root;
 
-        mylists.lists.forEach(mylist => {
+        mylists.reverse.forEach(mylist => {
             mylist.update();
         });
 
@@ -54,7 +54,7 @@ class MyListTree extends Component {
         const { mylists } = root;
 
         const items = [];
-        mylists.lists.forEach(mylist => items.push(<MyListTreeItem key={mylist.id} mylist={mylist} />));
+        mylists.reverse.forEach(mylist => items.push(<MyListTreeItem key={mylist.id} mylist={mylist} />));
 
         return (
             <div className={classes.listtree}>
