@@ -15,8 +15,9 @@ const axios = axiosBase.create({
 });
 
 const MyListMovieData = types.model({
-    url: "",
-    movieId: "",
+    // url: "",
+    // movieId: "",
+    id: types.identifier(types.string),
     title: "",
     thumbnailUrl: "",
     userName: "",
@@ -28,28 +29,25 @@ const MyListMovieData = types.model({
 
     // isLargeThumbnail: false, TODO
 }).views(self => ({
+
+    get url() {
+        return `http://www.nicovideo.jp/watch/${self.id}`
+    },
+
 })).actions(self => {
     function update() {
-        let uri = url.parse(self.url);
 
-        if(uri.hostname === "www.nicovideo.jp") {
-            let matches = uri.pathname.match(/watch\/([a-zA-Z0-9]+)/);
-            if(matches.length > 1) {
-                self.movieId = matches[1];
-            }
-        }
-
-        if(self.movieId) {
+        if(self.id) {
             self.fetch()
         }
     }
 
     function fetch() {
 
-        if (self.movieId) {
+        if (self.id) {
 
             // http://ext.nicovideo.jp/api/getthumbinfo/sm21520922
-            axios.get(`/api/getthumbinfo/${self.movieId}`).then(res => {
+            axios.get(`/api/getthumbinfo/${self.id}`).then(res => {
                 const xml = parseXml(res.data);
                 const nicovideo_thumb_response = xml.children[0];
 

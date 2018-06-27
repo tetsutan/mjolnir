@@ -2,20 +2,6 @@ import url from 'url';
 
 const Util = {
 
-    // getMyListNumberFromUrl: function(u) {
-    //
-    //     let uri = url.parse(u);
-    //
-    //     if(uri.hostname === "www.nicovideo.jp") {
-    //         let matches = uri.pathname.match(/mylist\/([0-9]+)/);
-    //         if(matches.length > 1) {
-    //             return matches[1];
-    //         }
-    //     }
-    //
-    //     return "";
-    // },
-
     normalizeMylistId: function(id_or_url) {
 
         let matches = id_or_url.match(/^(\d+)$/);
@@ -30,6 +16,32 @@ const Util = {
                 const uri = url.parse(id_or_url);
                 if(uri.hostname === "www.nicovideo.jp") {
                     let matches = uri.pathname.match(/mylist\/(\d+)/);
+                    if(matches && matches.length > 1) {
+                        return matches[1];
+                    }
+                }
+
+            }
+        }
+
+        return "";
+    },
+
+    normalizeMovieId: function(id_or_url) {
+
+        // http://www.nicovideo.jp/watch/sm33108816
+        let matches = id_or_url.match(/^(sm\d+)$/);
+        if(matches && matches.length > 1) {
+            return  matches[1];
+        } else {
+            let matches = id_or_url.match(/watch\/(sm\d+)$/);
+            if(matches && matches.length > 1) {
+                return matches[1];
+            } else {
+
+                const uri = url.parse(id_or_url);
+                if(uri.hostname === "www.nicovideo.jp") {
+                    let matches = uri.pathname.match(/watch\/(sm\d+)/);
                     if(matches && matches.length > 1) {
                         return matches[1];
                     }

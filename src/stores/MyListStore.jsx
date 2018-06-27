@@ -64,7 +64,8 @@ const MyListStore = types.model({
                     });
 
                     if (linkEl) {
-                        const movieData = MyListMovieData.create({url: linkEl.attributes.href});
+                        const movieId = Util.normalizeMovieId(linkEl.attributes.href);
+                        const movieData = MyListMovieData.create({id: movieId});
                         movies.push(movieData);
                     }
 
