@@ -3,7 +3,8 @@ import MyListStore from "./MyListStore";
 import Util from "../Util";
 
 const MyListsStore = types.model({
-    lists: types.map(MyListStore),
+    lists: types.optional(types.map(MyListStore), {}), // not save order
+    keys: types.optional(types.array(types.string), []), // save order
 }).views(self => ({
 
     get(id_or_url) {
@@ -15,7 +16,11 @@ const MyListsStore = types.model({
     },
 
     get reverse() {
-        return Array.from(self.lists.values()).reverse()
+        return self.keys.slice().reverse().map(k => self.lists.get(k))
+    },
+
+    get all() {
+        return self.keys.map(k => self.lists.get(k))
     }
 
 })).actions(self => {
@@ -27,14 +32,28 @@ const MyListsStore = types.model({
 
         const mylist = MyListStore.create({id: id});
         mylist.update();
-        self.lists.set(id, mylist)
+        self.lists.set(id, mylist);
+        self.keys.push(id);
     }
 
     function remove(id) {
-        self.lists.delete(Util.normalizeMylistId(id))
+        self.lists.delete(Util.normalizeMylistId(id));
+
+        const index = self.keys.indexOf(id);
+        self.keys.splice(index, 1) ;
     }
 
-    return {add, remove}
+    function moveTo(src, dst) {
+        const srcIndex = self.keys.indexOf(src);
+        const dstIndex = self.keys.indexOf(dst);
+
+        if(srcIndex >= 0 && dstIndex >= 0) {
+            self.keys.splice(srcIndex, 1);
+            self.keys.splice(dstIndex, 0, src)
+        }
+    }
+
+    return {add, remove, moveTo}
 });
 
 export default MyListsStore;

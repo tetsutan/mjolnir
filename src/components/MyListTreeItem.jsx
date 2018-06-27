@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import ClassNames from 'classnames';
+import {DragSource, DropTarget} from "react-dnd";
 
 const Menu = remote.Menu;
 const MenuItem = remote.MenuItem;
@@ -22,8 +23,44 @@ const styles = theme => ({
     }
 });
 
+const sourceSpec = {
+    beginDrag(props) {
+        return {
+            id: props.mylist.id
+        }
+    },
+    endDrag(props, monitor) {
+
+        const source = monitor.getItem();
+        // dropSpecのdropで返されたidを取ってくる
+        const target = monitor.getDropResult();
+        // dropActionを発火させる
+        if (target) {
+            props.root.mylists.moveTo(source.id, target.id);
+            // props.dropAction(source.index, target.index);
+        }
+
+    },
+};
+
+const targetSpec = {
+    // dropされたときの処理
+    drop(props, monitor, component) {
+        // dropされたら自分のidを返す
+        return {
+            id: props.mylist.id
+        }
+    }
+}
+
 @inject('root')
 @inject('movieIndex')
+@DragSource('ItemTypes.MyListTreeItem', sourceSpec, (connect) => ({
+    connectDragSource: connect.dragSource(),
+}))
+@DropTarget('ItemTypes.MyListTreeItem', targetSpec, (connect) => ({
+    connectDropTarget: connect.dropTarget(),
+}))
 @withStyles(styles) // withStyles must be before observer
 @observer
 class MyListTreeItem extends Component {
@@ -32,6 +69,9 @@ class MyListTreeItem extends Component {
         classes: PropTypes.object.isRequired,
         root: PropTypes.object.isRequired,
         mylist: PropTypes.object.isRequired,
+
+        connectDragSource: PropTypes.func.isRequired,
+        connectDropTarget: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -73,7 +113,7 @@ class MyListTreeItem extends Component {
 
 
     render() {
-        const { classes, root, mylist } = this.props;
+        const { classes, root, mylist, isDragging, connectDragSource, connectDropTarget } = this.props;
 
         const className = ClassNames({
             [classes.listItem]: true,
@@ -83,19 +123,21 @@ class MyListTreeItem extends Component {
         const updateView = mylist.updating ? <div>updating</div> : "";
         const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";
 
-        return (
-            <ListItem button className={className}
-                      onClick={this.handleClick}
-                      onDoubleClick={this.handleDoubleClick}
-                      onContextMenu={this.handleContextMenu}
-            >
-                <ListItemText primary={mylist.title} secondary={mylist.author}
-                              primaryTypographyProps={{variant: "body2", color: primaryColor}}
-                              secondaryTypographyProps={{variant: "caption"}}
-                />
-                {updateView}
-            </ListItem>
-        );
+        return connectDragSource(connectDropTarget(
+            <div>
+                <ListItem button className={className}
+                          onClick={this.handleClick}
+                          onDoubleClick={this.handleDoubleClick}
+                          onContextMenu={this.handleContextMenu}
+                >
+                    <ListItemText primary={mylist.title} secondary={mylist.author}
+                                  primaryTypographyProps={{variant: "body2", color: primaryColor}}
+                                  secondaryTypographyProps={{variant: "caption"}}
+                    />
+                    {updateView}
+                </ListItem>
+            </div>
+        ));
     }
 }
 

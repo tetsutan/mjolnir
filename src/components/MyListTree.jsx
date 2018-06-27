@@ -9,6 +9,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import CachedIcon from '@material-ui/icons/Cached';
+import {DragDropContext} from "react-dnd";
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import MyListTreeItem from "./MyListTreeItem";
 
@@ -26,6 +28,7 @@ const styles = theme => ({
 });
 
 @inject('root')
+@DragDropContext(HTML5Backend)
 @observer
 class MyListTree extends Component {
 
