@@ -2,6 +2,13 @@ import url from 'url';
 
 const Util = {
 
+    ShowType : {
+        MYLIST: 'MYLIST',
+        HISTORY: 'HISTORY',
+        MOVIE: 'MOVIE',
+    },
+
+
     normalizeMylistId: function(id_or_url) {
 
         let matches = id_or_url.match(/^(\d+)$/);

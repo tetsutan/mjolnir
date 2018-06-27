@@ -86,6 +86,8 @@ class MovieList extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.selectedClassNames = this.selectedClassNames.bind(this);
         this.watchedColor = this.watchedColor.bind(this);
+
+        this.currentMovies = this.currentMovies.bind(this);
     }
 
     handleClick(e, index) {
@@ -95,21 +97,20 @@ class MovieList extends Component {
 
     handleDoubleClick(e, index) {
         e.preventDefault();
+        e.stopPropagation();
 
         const { classes, root } = this.props;
-        const { mylists } = root;
-        if(!root.showing) {
-            return
-        }
+        const { mylists, historyStore } = root;
 
-        const current = mylists.get(root.showing);
+        const movies = this.currentMovies();
 
-        if(current) {
-            const movie = current.movies.get(index);
-            if (movie) {
-                movie.setWatched();
-                ipcRenderer.send("open", movie.url);
-            }
+        console.log(historyStore);
+
+        const movie = movies.get(index);
+        if (movie) {
+            movie.setWatched();
+            historyStore.add(movie);
+            ipcRenderer.send("open", movie.url);
         }
 
 
@@ -139,24 +140,37 @@ class MovieList extends Component {
 
     }
 
+    currentMovies() {
+        const { root } = this.props;
+        const { mylists, historyStore } = root;
+
+        if(root.isShowingHistory) {
+            return historyStore.movies;
+        }
+        else {
+            if(root.showing) {
+                const current = mylists.get(root.showing);
+                if(current) {
+                    return current.movies;
+                }
+            }
+        }
+
+
+        return [];
+    }
+
     render() {
-        const { classes, root, movieIndex } = this.props;
-        const { mylists } = root;
-        if(!root.showing) {
-            return <div />
-        }
+        const { classes } = this.props;
 
-        const current = mylists.get(root.showing);
+        const movies = this.currentMovies();
 
-        if(!current) {
-            return <div />
-        }
 
         return (
             <div>
                 <List component="nav" className={classes.list}>
 
-                    {current.movies.map((movie,index) =>
+                    {movies.map((movie,index) =>
                         <ListItem key={index}
                                   className={classes.listItem}
                                   onDoubleClick={e => this.handleDoubleClick(e, index)}

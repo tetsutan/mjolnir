@@ -9,10 +9,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import CachedIcon from '@material-ui/icons/Cached';
+import ListIcon from '@material-ui/icons/List';
 import {DragDropContext} from "react-dnd";
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import MyListTreeItem from "./MyListTreeItem";
+import HistoryTab from "./HistoryTab";
 
 
 
@@ -62,7 +64,10 @@ class MyListTree extends Component {
         return (
             <div className={classes.listtree}>
                 <List component="nav">
+                    <HistoryTab />
+                    <Divider />
                     <ListItem>
+                        <ListIcon />
                         <ListItemText primary="My List" />
                         <IconButton className={classes.button} aria-label="reload" onClick={this.handleReloadClick}>
                             <CachedIcon />
