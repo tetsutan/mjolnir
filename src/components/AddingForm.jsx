@@ -42,15 +42,14 @@ export default class AddingForm extends React.Component {
         if(urlStore.isNicoUrl) {
 
             const url = urlStore.url;
-            const mylistNumber = Util.getMyListNumberFromUrl(url);
 
-            if(mylists.lists.get(mylistNumber)) {
+            if(mylists.has(url)) {
                 // すでにある
                 urlStoreError.set("Already in list");
                 urlStoreError.clearAfter(5);
                 urlStore.clear();
             } else {
-                mylists.add(mylistNumber);
+                mylists.add(url);
                 urlStore.clear()
             }
 

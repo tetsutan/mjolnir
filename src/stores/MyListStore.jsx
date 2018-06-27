@@ -89,7 +89,6 @@ const MyListStore = types.model({
         self.title = normalizeMyListTitle(title);
     }
     function updateAuthor(author) {
-        console.log(author);;
         self.author = author;
     }
 
@@ -98,7 +97,6 @@ const MyListStore = types.model({
         // 並び順を最新の並び順でとりたい
         const ms = movies.map(m => {
             const found = self.movies.find(m2 => m2.url === m.url);
-            console.log(found);
             if(found) {
                 return found;
             }
