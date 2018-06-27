@@ -1,5 +1,6 @@
 import {types} from "mobx-state-tree"
 import MyListsStore from "./MyListsStore";
+import MyListStore from "./MyListStore";
 import UrlStore from "./UrlStore";
 import IndexStore from "./IndexStore";
 import Util from "../Util";
@@ -8,7 +9,7 @@ import MovieListStore from "./MovieListStore";
 
 
 const RootStore = types.model({
-    showing: "",
+    showing: types.maybe(types.reference(MyListStore)),
     showType: Util.ShowType.MYLIST,
     mylists: MyListsStore,
     urlStore: UrlStore,
@@ -23,17 +24,17 @@ const RootStore = types.model({
         return self.showType === Util.ShowType.MOVIE;
     }
 })).actions(self => {
-    function setShowing(key) {
+    function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;
-        self.showing = key;
+        self.showing = mylist;
     }
     function setShowingHistory() {
         self.showType = Util.ShowType.HISTORY;
-        self.showing = "";
+        self.showing = null;
     }
     function setShowingMovie() {
         self.showType = Util.ShowType.MOVIE;
-        self.showing = "";
+        self.showing = null;
     }
     return {setShowing, setShowingHistory, setShowingMovie}
 });

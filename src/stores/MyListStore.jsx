@@ -61,7 +61,8 @@ const MyListStore = types.model({
                         const movieId = Util.normalizeMovieId(linkEl.attributes.href);
                         // // const movieData = MovieStore.create({id: movieId});
                         movieListStore.add(movieId);
-                        movies.push(movieId);
+                        const movie = movieListStore.get(movieId);
+                        movies.push(movie);
                     }
 
                 });

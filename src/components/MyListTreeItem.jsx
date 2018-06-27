@@ -84,7 +84,7 @@ class MyListTreeItem extends Component {
     handleClick(e) {
         const { root, movieIndex, mylist} = this.props;
         movieIndex.clear();
-        root.setShowing(mylist.id);
+        root.setShowing(mylist);
     }
 
     handleDoubleClick(e) {
@@ -117,7 +117,7 @@ class MyListTreeItem extends Component {
 
         const className = ClassNames({
             [classes.listItem]: true,
-            [classes.active]: root.showing === mylist.id,
+            [classes.active]: root.showing && root.showing.id === mylist.id,
         });
 
         const updateView = mylist.updating ? <div>updating</div> : "";

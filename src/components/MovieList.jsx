@@ -149,10 +149,7 @@ class MovieList extends Component {
         }
         else {
             if(root.showing) {
-                const current = mylists.get(root.showing);
-                if(current) {
-                    return current.movies;
-                }
+                return root.showing.movies;
             }
         }
 
