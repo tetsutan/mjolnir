@@ -1,13 +1,14 @@
 import {getSnapshot, types} from "mobx-state-tree"
 import MyListMovieData from "./MyListMovieData";
+import MovieStore from "./MovieStore";
 
 const HistoryStore = types.model({
-    movies: types.optional(types.array(types.reference(MyListMovieData)), []),
+    movies: types.optional(types.array(types.reference(MovieStore)), []),
 }).views(self => ({
 })).actions(self => {
 
-    function add(movieData) {
-        self.movies.push(movieData.id)
+    function add(movie) {
+        self.movies.push(movie.id)
     }
 
 

@@ -25,13 +25,13 @@ const MyListsStore = types.model({
 
 })).actions(self => {
 
-    function add(id_or_url) {
+    function add(id_or_url, movieListStore) {
         const id = Util.normalizeMylistId(id_or_url);
 
         console.log(id);
 
         const mylist = MyListStore.create({id: id});
-        mylist.update();
+        mylist.update(movieListStore);
         self.lists.set(id, mylist);
         self.keys.push(id);
     }

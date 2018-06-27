@@ -33,7 +33,7 @@ export default class AddingForm extends React.Component {
 
     handleClickAddButton(e) {
         const { root, urlStoreError } = this.props;
-        const { urlStore, mylists } = root;
+        const { urlStore, mylists, movieListStore } = root;
 
         if(e){
             e.preventDefault();
@@ -49,7 +49,7 @@ export default class AddingForm extends React.Component {
                 urlStoreError.clearAfter(5);
                 urlStore.clear();
             } else {
-                mylists.add(url);
+                mylists.add(url, movieListStore);
                 urlStore.clear()
             }
 

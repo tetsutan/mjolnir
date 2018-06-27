@@ -4,6 +4,7 @@ import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
 import MyListMovieData from "./MyListMovieData";
 import Util from '../Util'
+import MovieStore from "./MovieStore";
 
 const axios = axiosBase.create({
     baseURL: 'http://www.nicovideo.jp',
@@ -19,7 +20,7 @@ const MyListStore = types.model({
     id: types.identifier(types.string),
     title: types.optional(types.string, ""),
     author: "",
-    movies: types.optional(types.array(MyListMovieData), []),
+    movies: types.optional(types.array(types.reference(MovieStore)), []),
     updating: false
 }).views(self => ({
     get url() {
@@ -30,14 +31,7 @@ const MyListStore = types.model({
     },
 })).actions(self => {
 
-    function update() {
-        if(self.id) {
-            self.fetch()
-        }
-
-    }
-
-    function fetch() {
+    function update(movieListStore) {
         if (self.id && !self.updating) {
             self.setUpdating(true);
 
@@ -65,8 +59,9 @@ const MyListStore = types.model({
 
                     if (linkEl) {
                         const movieId = Util.normalizeMovieId(linkEl.attributes.href);
-                        const movieData = MyListMovieData.create({id: movieId});
-                        movies.push(movieData);
+                        // // const movieData = MovieStore.create({id: movieId});
+                        movieListStore.add(movieId);
+                        movies.push(movieId);
                     }
 
                 });
@@ -94,19 +89,7 @@ const MyListStore = types.model({
     }
 
     function updateMovies(movies) {
-
-        // 並び順を最新の並び順でとりたい
-        const ms = movies.map(m => {
-            const found = self.movies.find(m2 => m2.url === m.url);
-            if(found) {
-                return found;
-            }
-
-            m.update();
-            return m;
-        });
-
-        self.movies = ms
+        self.movies = movies
     }
 
     function setUpdating(b) {
