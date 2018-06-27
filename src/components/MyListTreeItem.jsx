@@ -24,8 +24,8 @@ const styles = theme => ({
 
 @inject('root')
 @inject('movieIndex')
+@withStyles(styles) // withStyles must be before observer
 @observer
-@withStyles(styles)
 class MyListTreeItem extends Component {
 
     static propTypes = {
