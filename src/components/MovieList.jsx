@@ -145,7 +145,7 @@ class MovieList extends Component {
         const { mylists, historyStore } = root;
 
         if(root.isShowingHistory) {
-            return historyStore.movies;
+            return historyStore.movies.slice().reverse();
         }
         else {
             if(root.showing) {
