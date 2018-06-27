@@ -143,7 +143,7 @@ class MovieList extends Component {
         const { classes, root, movieIndex } = this.props;
         const { mylists } = root;
         if(!root.showing) {
-            return <div>none</div>
+            return <div />
         }
 
         const current = mylists.get(root.showing);
