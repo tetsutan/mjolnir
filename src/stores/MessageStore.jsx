@@ -1,10 +1,10 @@
 import {types} from "mobx-state-tree"
 
-const ErrorStore = types.model({
+const MessageStore = types.model({
     message: ""
 }).views(self => ({
-    get hasError() {
-        return self.message !== ""
+    get empty() {
+        return self.message === "";
     }
 }))
     .actions(self => {
@@ -24,4 +24,4 @@ const ErrorStore = types.model({
         return {set, clear, clearAfter};
     });
 
-export default ErrorStore;
+export default MessageStore;

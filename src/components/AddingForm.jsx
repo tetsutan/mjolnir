@@ -15,7 +15,7 @@ const styles = theme => ({
 });
 
 @inject('root')
-@inject('urlStoreError')
+@inject('urlMessageStore')
 @withStyles(styles)
 @observer
 export default class AddingForm extends React.Component {
@@ -32,7 +32,7 @@ export default class AddingForm extends React.Component {
     };
 
     handleClickAddButton(e) {
-        const { root, urlStoreError } = this.props;
+        const { root, urlMessageStore } = this.props;
         const { urlStore, mylists, movieListStore, singleMoviesStore } = root;
 
         if(e){
@@ -45,15 +45,19 @@ export default class AddingForm extends React.Component {
 
             if(mylists.has(url)) {
                 // すでにある
-                urlStoreError.set("Already in list");
-                urlStoreError.clearAfter(5);
+                urlMessageStore.set("Already in list");
+                urlMessageStore.clearAfter(5);
                 urlStore.clear();
             } else {
                 mylists.add(url, movieListStore);
+                urlMessageStore.set("Added");
+                urlMessageStore.clearAfter(5);
                 urlStore.clear()
             }
         } else if(Util.normalizeMovieId(url)) {
             singleMoviesStore.add(url, movieListStore);
+            urlMessageStore.set("Added");
+            urlMessageStore.clearAfter(5);
             urlStore.clear();
         }
     }
@@ -71,15 +75,18 @@ export default class AddingForm extends React.Component {
 
 
     render() {
-        const { root, urlStoreError, classes } = this.props;
+        const { root, urlMessageStore, classes } = this.props;
         const { urlStore } = root;
 
-        const err = <Typography color="error" disabled={!urlStoreError.hasError}>{urlStoreError.message}</Typography>;
+        let err = <div />;
+        if (!urlMessageStore.empty) {
+            err = <Typography color="error">{urlMessageStore.message}</Typography>
+        }
 
         return <div>
             <TextField
                 id="url"
-                label="URL of mylist"
+                label="URL/id of movie/mylist"
                 value={urlStore.url}
                 error={urlStore.hasError}
                 onChange={urlStore.handleChange}
@@ -93,6 +100,7 @@ export default class AddingForm extends React.Component {
                 <AddCircleOutlineIcon />
             </IconButton>
             {err}
+
         </div>
     }
 }
