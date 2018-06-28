@@ -33,15 +33,15 @@ export default class AddingForm extends React.Component {
 
     handleClickAddButton(e) {
         const { root, urlStoreError } = this.props;
-        const { urlStore, mylists, movieListStore } = root;
+        const { urlStore, mylists, movieListStore, singleMoviesStore } = root;
 
         if(e){
             e.preventDefault();
         }
 
-        if(urlStore.isNicoUrl) {
-
-            const url = urlStore.url;
+        // normalizeを使ってmylistかどうか判定
+        const url = urlStore.url;
+        if(Util.normalizeMylistId(url)) {
 
             if(mylists.has(url)) {
                 // すでにある
@@ -52,8 +52,9 @@ export default class AddingForm extends React.Component {
                 mylists.add(url, movieListStore);
                 urlStore.clear()
             }
-
-
+        } else if(Util.normalizeMovieId(url)) {
+            singleMoviesStore.add(url, movieListStore);
+            urlStore.clear();
         }
     }
 

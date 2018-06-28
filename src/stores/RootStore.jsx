@@ -6,6 +6,7 @@ import IndexStore from "./IndexStore";
 import Util from "../Util";
 import HistoryStore from "./HistoryStore";
 import MovieListStore from "./MovieListStore";
+import SingleMoviesStore from "./SingleMoviesStore";
 
 
 const RootStore = types.model({
@@ -15,6 +16,7 @@ const RootStore = types.model({
     urlStore: UrlStore,
     historyStore: HistoryStore,
     movieListStore: MovieListStore,
+    singleMoviesStore: SingleMoviesStore,
 
 }).views(self => ({
     get isShowingHistory() {

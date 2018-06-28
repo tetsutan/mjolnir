@@ -15,6 +15,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 
 import MyListTreeItem from "./MyListTreeItem";
 import HistoryTab from "./HistoryTab";
+import SingleMoviesTab from "./SingleMoviesTab";
 
 
 
@@ -27,6 +28,13 @@ const styles = theme => ({
         overflowX: "hidden",
         height: '100vh'
     },
+    button: {
+        margin: theme.spacing.unit,
+    },
+    listheader: {
+        height: 80
+    }
+
 });
 
 @inject('root')
@@ -64,9 +72,11 @@ class MyListTree extends Component {
         return (
             <div className={classes.listtree}>
                 <List component="nav">
+                    <SingleMoviesTab />
+                    <Divider />
                     <HistoryTab />
                     <Divider />
-                    <ListItem>
+                    <ListItem className={classes.listheader}>
                         <ListIcon />
                         <ListItemText primary="My List" />
                         <IconButton className={classes.button} aria-label="reload" onClick={this.handleReloadClick}>

@@ -5,6 +5,7 @@ import { inject, observer } from 'mobx-react';
 import {remote} from 'electron'
 
 import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
@@ -123,21 +124,25 @@ class MyListTreeItem extends Component {
         const updateView = mylist.updating ? <div>updating</div> : "";
         const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";
 
-        return connectDragSource(connectDropTarget(
+        const dragView = connectDragSource(connectDropTarget(
             <div>
-                <ListItem button className={className}
-                          onClick={this.handleClick}
-                          onDoubleClick={this.handleDoubleClick}
-                          onContextMenu={this.handleContextMenu}
-                >
-                    <ListItemText primary={mylist.title} secondary={mylist.author}
-                                  primaryTypographyProps={{variant: "body2", color: primaryColor}}
-                                  secondaryTypographyProps={{variant: "caption"}}
-                    />
-                    {updateView}
-                </ListItem>
+                <ListItemText primary={mylist.title} secondary={mylist.author}
+                              primaryTypographyProps={{variant: "body2", color: primaryColor}}
+                              secondaryTypographyProps={{variant: "caption"}}
+                />
             </div>
         ));
+
+        return (
+            <ListItem button className={className}
+                      onClick={this.handleClick}
+                      onDoubleClick={this.handleDoubleClick}
+                      onContextMenu={this.handleContextMenu}
+            >
+                {dragView}
+                {updateView}
+            </ListItem>
+        );
     }
 }
 

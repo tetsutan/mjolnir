@@ -142,12 +142,14 @@ class MovieList extends Component {
 
     currentMovies() {
         const { root } = this.props;
-        const { mylists, historyStore } = root;
+        const { mylists, historyStore, singleMoviesStore } = root;
 
         if(root.isShowingHistory) {
             return historyStore.movies.slice().reverse();
         }
-        else {
+        else if(root.isShowingMovie) {
+            return singleMoviesStore.movies.slice().reverse();
+        } else {
             if(root.showing) {
                 return root.showing.movies;
             }

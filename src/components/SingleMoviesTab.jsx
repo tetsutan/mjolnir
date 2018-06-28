@@ -5,7 +5,7 @@ import { inject, observer } from 'mobx-react';
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import HistoryIcon from '@material-ui/icons/History';
+import MovieIcon from '@material-ui/icons/Movie';
 
 import classNames from 'classnames';
 
@@ -31,7 +31,7 @@ const styles = theme => ({
 @inject('movieIndex')
 @withStyles(styles)
 @observer
-class HistoryTab extends Component {
+class SingleMoviesTab extends Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
@@ -46,21 +46,21 @@ class HistoryTab extends Component {
     handleClick(e) {
         const { root, movieIndex } = this.props;
         movieIndex.clear();
-        root.setShowingHistory();
+        root.setShowingMovie();
     }
 
     render() {
         const { classes, root } = this.props;
         return (
             <ListItem button onClick={this.handleClick} className={classNames({
-                [classes.active]: root.isShowingHistory,
+                [classes.active]: root.isShowingMovie,
                 [classes.listheader]: true,
             })}>
-                <HistoryIcon />
-                <ListItemText primary="History" />
+                <MovieIcon />
+                <ListItemText primary="Single Movies" />
             </ListItem>
         );
     }
 }
 
-export default HistoryTab;
+export default SingleMoviesTab;
