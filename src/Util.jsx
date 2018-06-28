@@ -10,6 +10,7 @@ const Util = {
 
 
     normalizeMylistId: function(id_or_url) {
+        id_or_url = id_or_url.trim();
 
         let matches = id_or_url.match(/^(\d+)$/);
         if(matches && matches.length > 1) {
@@ -35,6 +36,7 @@ const Util = {
     },
 
     normalizeMovieId: function(id_or_url) {
+        id_or_url = id_or_url.trim();
 
         // http://www.nicovideo.jp/watch/sm33108816
         let matches = id_or_url.match(/^(sm\d+)$/);

@@ -1,16 +1,12 @@
 import {types} from "mobx-state-tree"
+import Util from "../Util";
 
 const UrlStore = types.model({
     url: types.string
 }).views(self => ({
 
-    get isNicoUrl() {
-        // httpなし、mylistIDだけからも通せるようにする
-        return /^http([s]?):\/\/www.nicovideo.jp/g.test(self.url)
-    },
-
     get hasError() {
-        return self.url !== "" && !self.isNicoUrl
+        return self.url !== "" && !(Util.normalizeMovieId(self.url) || Util.normalizeMylistId(self.url))
     }
 
 }))
