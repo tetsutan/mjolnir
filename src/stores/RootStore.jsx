@@ -25,7 +25,29 @@ const RootStore = types.model({
     },
     get isShowingMovie() {
         return self.showType === Util.ShowType.MOVIE;
-    }
+    },
+
+    get currentMovies() {
+
+        if(self.isShowingHistory) {
+            return self.historyStore.movies.slice().reverse();
+        }
+        else if(self.isShowingMovie) {
+            return self.singleMoviesStore.movies.slice().reverse();
+        } else {
+            if(self.showing) {
+                return self.showing.movies;
+            }
+        }
+
+        return [];
+
+    },
+
+    get currentMovie() {
+        return self.currentMovies.get(self.movieIndex.index);
+    },
+
 })).actions(self => {
     function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;

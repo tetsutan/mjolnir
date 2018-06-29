@@ -88,7 +88,6 @@ class MovieList extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.watchedColor = this.watchedColor.bind(this);
 
-        this.currentMovies = this.currentMovies.bind(this);
         this.scrollToSection = this.scrollToSection.bind(this);
     }
 
@@ -105,9 +104,7 @@ class MovieList extends Component {
         const { classes, root } = this.props;
         const { mylists, historyStore } = root;
 
-        const movies = this.currentMovies();
-
-        console.log(historyStore);
+        const movies = root.currentMovies;
 
         const movie = movies.get(index);
         if (movie) {
@@ -119,10 +116,10 @@ class MovieList extends Component {
     }
 
     scrollToSection(section) {
+        // dom element
         if(section) {
-            section.scrollIntoView();
+            section.scrollIntoView({block: "nearest"});
         }
-
     }
 
     watchedColor(movie) {
@@ -133,30 +130,11 @@ class MovieList extends Component {
 
     }
 
-    currentMovies() {
-        const { root } = this.props;
-        const { mylists, historyStore, singleMoviesStore } = root;
-
-        if(root.isShowingHistory) {
-            return historyStore.movies.slice().reverse();
-        }
-        else if(root.isShowingMovie) {
-            return singleMoviesStore.movies.slice().reverse();
-        } else {
-            if(root.showing) {
-                return root.showing.movies;
-            }
-        }
-
-
-        return [];
-    }
-
     render() {
         const { classes, root } = this.props;
         const { movieIndex } = root;
 
-        const movies = this.currentMovies();
+        const movies = root.currentMovies;
 
 
         return (

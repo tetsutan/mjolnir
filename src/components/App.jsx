@@ -1,6 +1,7 @@
 
 import React from "react";
 // import storage from 'electron-json-storage';
+import { ipcRenderer } from 'electron'
 import { inject, observer } from 'mobx-react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ClippedDrawer from './ClippedDrawer'
@@ -20,6 +21,16 @@ export default class App extends React.Component {
         Mousetrap.bind(['a'], root.moveToPrevMylist);
         Mousetrap.bind(['j'], root.moveToNextMovie);
         Mousetrap.bind(['k'], root.moveToPrevMovie);
+        Mousetrap.bind(['o'], () => {
+
+            const movie = root.currentMovie;
+            if (movie) {
+                movie.setWatched();
+                root.historyStore.add(movie);
+                ipcRenderer.send("open", movie.url);
+            }
+
+        });
     }
 
     componentWillUnmount() {
