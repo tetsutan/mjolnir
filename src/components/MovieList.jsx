@@ -65,9 +65,15 @@ const styles = theme => ({
         width: 20,
         height: 20,
     },
+    dateList: {
+        marginTop: 20,
+        display: 'flex'
+    },
     date: {
-        marginTop: 20
-    }
+        paddingRight: theme.spacing.unit
+
+    },
+
 
 
 });
@@ -174,8 +180,10 @@ class MovieList extends Component {
                                                 <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
                                             </div>
                                             <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
-                                            <div className={classes.date} >
-                                                <Typography variant="caption" color="textSecondary">{movie.date}</Typography>
+                                            <div className={classes.dateList} >
+                                                <Typography className={classes.date} variant="caption" color="textSecondary">{movie.length}</Typography>
+                                                <Typography className={classes.date} variant="caption" color="textSecondary">-</Typography>
+                                                <Typography className={classes.date} variant="caption" color="textSecondary">{movie.date}</Typography>
                                             </div>
 
                                         </CardContent>

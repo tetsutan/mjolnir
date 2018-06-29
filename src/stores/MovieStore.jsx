@@ -23,6 +23,7 @@ const MovieStore = types.model({
     userIcon: "",
     date: "",
     description: "",
+    length: "",
 
     updating: false,
     watched: false,
@@ -68,6 +69,7 @@ const MovieStore = types.model({
                         self.updateUserIcon(Util.xmlGetFirstChildrenText(thumbEl, "user_icon_url"));
                         self.updateDate(Util.xmlGetFirstChildrenText(thumbEl, "first_retrieve"));
                         self.updateDescription(Util.xmlGetFirstChildrenText(thumbEl, "description"));
+                        self.updateLength(Util.xmlGetFirstChildrenText(thumbEl, "length"));
 
                     }
 
@@ -108,6 +110,9 @@ const MovieStore = types.model({
     function updateDescription(v) {
         self.description = v;
     }
+    function updateLength(v) {
+        self.length = v;
+    }
 
     function setUpdating(b) {
         self.updating = b;
@@ -122,7 +127,7 @@ const MovieStore = types.model({
     // private
 
     return {update, fetch, updateTitle, updateThumbnailUrl,
-        updateUserName, updateUserIcon, updateDate, updateDescription,
+        updateUserName, updateUserIcon, updateDate, updateDescription, updateLength,
         setUpdating, setWatched, toggleWatched,
     }
 });
