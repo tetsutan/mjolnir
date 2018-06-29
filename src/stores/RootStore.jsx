@@ -17,6 +17,7 @@ const RootStore = types.model({
     historyStore: HistoryStore,
     movieListStore: MovieListStore,
     singleMoviesStore: SingleMoviesStore,
+    movieIndex: IndexStore,
 
 }).views(self => ({
     get isShowingHistory() {
@@ -38,7 +39,74 @@ const RootStore = types.model({
         self.showType = Util.ShowType.MOVIE;
         self.showing = null;
     }
-    return {setShowing, setShowingHistory, setShowingMovie}
+
+    function moveToNextMylist(e) {
+        self.moveToMylist(1)
+    }
+    function moveToPrevMylist(e) {
+        self.moveToMylist(-1)
+    }
+    function moveToMylist(offset) {
+
+        // mylists.keys's index is reversed on view
+        offset = -offset;
+
+        if (self.mylists.keys.length > 0) {
+            if(self.showing && self.showType === Util.ShowType.MYLIST) {
+                // find next
+                const currentIndex = self.mylists.keys.indexOf(self.showing.id);
+                const maxIndex = self.mylists.keys.length-1;
+                let nextIndex = currentIndex+offset;
+                if(nextIndex < 0){ nextIndex = 0 }
+                if(maxIndex < nextIndex) { nextIndex = maxIndex; }
+
+                if(currentIndex !== nextIndex) {
+                    self.showing = self.mylists.keys[nextIndex];
+                    self.movieIndex.clear()
+                }
+
+            } else {
+                self.showing = self.mylists.keys[0];
+                self.showType = Util.ShowType.MYLIST;
+                self.movieIndex.clear()
+            }
+        }
+    }
+
+    function moveToNextMovie(e) {
+        self.moveToMovie(1)
+    }
+    function moveToPrevMovie(e) {
+        self.moveToMovie(-1)
+    }
+
+    function moveToMovie(offset) {
+
+
+        const currentIndex = self.movieIndex.index;
+        let nextIndex = currentIndex + offset;
+        if(nextIndex < 0) { nextIndex = 0; }
+
+        let maxIndex = 0;
+        if(self.showing && self.showType === Util.ShowType.MYLIST) {
+            maxIndex = self.showing.movies.length-1
+        } else {
+            if(self.showType === Util.ShowType.HISTORY) {
+                maxIndex = self.historyStore.movies.length -1
+            } else if(self.showType === Util.ShowType.MOVIE) {
+                maxIndex = self.singleMoviesStore.movies.length -1
+            }
+        }
+
+        if(maxIndex < nextIndex) { nextIndex = maxIndex; }
+        self.movieIndex.set(nextIndex);
+
+    }
+
+    return {setShowing, setShowingHistory, setShowingMovie,
+        moveToMylist, moveToNextMylist, moveToPrevMylist,
+        moveToMovie, moveToNextMovie, moveToPrevMovie,
+    }
 });
 
 export default RootStore;

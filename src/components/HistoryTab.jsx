@@ -28,7 +28,6 @@ const styles = theme => ({
 });
 
 @inject('root')
-@inject('movieIndex')
 @withStyles(styles)
 @observer
 class HistoryTab extends Component {
@@ -44,7 +43,8 @@ class HistoryTab extends Component {
     }
 
     handleClick(e) {
-        const { root, movieIndex } = this.props;
+        const { root } = this.props;
+        const { movieIndex } = root;
         movieIndex.clear();
         root.setShowingHistory();
     }

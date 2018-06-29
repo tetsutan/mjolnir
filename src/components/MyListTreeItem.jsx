@@ -55,7 +55,6 @@ const targetSpec = {
 }
 
 @inject('root')
-@inject('movieIndex')
 @DragSource('ItemTypes.MyListTreeItem', sourceSpec, (connect) => ({
     connectDragSource: connect.dragSource(),
 }))
@@ -83,7 +82,8 @@ class MyListTreeItem extends Component {
     }
 
     handleClick(e) {
-        const { root, movieIndex, mylist} = this.props;
+        const { root, mylist} = this.props;
+        const { movieIndex } = root;
         movieIndex.clear();
         root.setShowing(mylist);
     }

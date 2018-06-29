@@ -43,14 +43,15 @@ const styles = theme => ({
     },
     content: {
         flexGrow: 1,
+        display: 'flex',
+        flexDirection: "column",
         backgroundColor: theme.palette.background.default,
         padding: theme.spacing.unit,
         minWidth: 0, // So the Typography noWrap works
         height: "100vh",
-        overflowY: "scroll",
-        overflowX: "hidden",
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: theme.mixins.toolbar
+
 });
 
 @withStyles(styles)

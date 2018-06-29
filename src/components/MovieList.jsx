@@ -20,6 +20,9 @@ import Avatar from "@material-ui/core/Avatar";
 const styles = theme => ({
     list: {
         padding: 0,
+        flex: 'auto',
+        overflowY: "scroll",
+        overflowX: "hidden",
     },
     listItem: {
         padding: theme.spacing.unit
@@ -71,7 +74,6 @@ const styles = theme => ({
 
 
 @inject('root')
-@inject('movieIndex')
 @observer
 class MovieList extends Component {
 
@@ -84,14 +86,15 @@ class MovieList extends Component {
         super(props);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleClick = this.handleClick.bind(this);
-        this.selectedClassNames = this.selectedClassNames.bind(this);
         this.watchedColor = this.watchedColor.bind(this);
 
         this.currentMovies = this.currentMovies.bind(this);
+        this.scrollToSection = this.scrollToSection.bind(this);
     }
 
     handleClick(e, index) {
-        const { movieIndex } = this.props;
+        const { root } = this.props;
+        const { movieIndex } = root;
         movieIndex.set(index);
     }
 
@@ -113,22 +116,12 @@ class MovieList extends Component {
             ipcRenderer.send("open", movie.url);
         }
 
-
     }
 
-    selectedClassNames(index) {
-        const { classes, movieIndex } = this.props;
-
-        if(index === movieIndex.index) {
-            return classNames({
-                [classes.card]: true,
-                [classes.cardSelected]: true,
-            });
+    scrollToSection(section) {
+        if(section) {
+            section.scrollIntoView();
         }
-
-        return classNames({
-            [classes.card]: true,
-        });
 
     }
 
@@ -160,45 +153,58 @@ class MovieList extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, root } = this.props;
+        const { movieIndex } = root;
 
         const movies = this.currentMovies();
 
 
         return (
-            <div>
-                <List component="nav" className={classes.list}>
+            <div className={classes.list}>
+                <List component="nav" >
 
                     {movies.map((movie,index) =>
-                        <ListItem key={index}
-                                  className={classes.listItem}
-                                  onDoubleClick={e => this.handleDoubleClick(e, index)}
-                                  onClick={e => this.handleClick(e, index)}>
-                            <Card className={this.selectedClassNames(index)} >
-                                <CardMedia
-                                    className={classes.cover}
-                                    image={movie.thumbnailUrl}
-                                />
-                                <div className={classes.details}>
-                                    <CardContent className={classes.content}>
-                                        <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
-                                        <div className={classes.author}>
-                                            <Avatar
-                                                alt={movie.userName}
-                                                src={movie.userIcon}
-                                                className={classes.smallAvatar}
-                                            />
-                                            <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
-                                        </div>
-                                        <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
-                                        <div className={classes.date} >
-                                            <Typography variant="caption" color="textSecondary">{movie.date}</Typography>
-                                        </div>
+                        // ref's element does not return with wrapped content (e.g. withStyles)
+                        <div key={index}
+                             ref={(section) => {
+                                 if(movieIndex.is(index)){
+                                     this.scrollToSection(section);
+                                 }
+                             }}>
+                            <ListItem
+                                className={classes.listItem}
+                                onDoubleClick={e => this.handleDoubleClick(e, index)}
+                                onClick={e => this.handleClick(e, index)}>
 
-                                    </CardContent>
-                                </div>
-                            </Card>
-                        </ListItem>
+                                <Card className={classNames({
+                                    [classes.card]: true,
+                                    [classes.cardSelected]: movieIndex.is(index),
+                                })} >
+                                    <CardMedia
+                                        className={classes.cover}
+                                        image={movie.thumbnailUrl}
+                                    />
+                                    <div className={classes.details}>
+                                        <CardContent className={classes.content}>
+                                            <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
+                                            <div className={classes.author}>
+                                                <Avatar
+                                                    alt={movie.userName}
+                                                    src={movie.userIcon}
+                                                    className={classes.smallAvatar}
+                                                />
+                                                <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
+                                            </div>
+                                            <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
+                                            <div className={classes.date} >
+                                                <Typography variant="caption" color="textSecondary">{movie.date}</Typography>
+                                            </div>
+
+                                        </CardContent>
+                                    </div>
+                                </Card>
+                            </ListItem>
+                        </div>
                     )}
                 </List>
             </div>

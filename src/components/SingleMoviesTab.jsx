@@ -28,7 +28,6 @@ const styles = theme => ({
 });
 
 @inject('root')
-@inject('movieIndex')
 @withStyles(styles)
 @observer
 class SingleMoviesTab extends Component {
@@ -44,7 +43,8 @@ class SingleMoviesTab extends Component {
     }
 
     handleClick(e) {
-        const { root, movieIndex } = this.props;
+        const { root } = this.props;
+        const { movieIndex } = root;
         movieIndex.clear();
         root.setShowingMovie();
     }
