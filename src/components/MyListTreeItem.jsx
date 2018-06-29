@@ -142,7 +142,7 @@ class MyListTreeItem extends Component {
 
         const className = ClassNames({
             [classes.listItem]: true,
-            [classes.active]: root.showing && root.showing.id === mylist.id,
+            [classes.active]: root.mylists.showing && root.mylists.showing.id === mylist.id,
         });
 
         const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";

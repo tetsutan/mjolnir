@@ -11,7 +11,6 @@ import ContextStore from "./ContextStore";
 
 
 const RootStore = types.model({
-    showing: types.maybe(types.reference(MyListStore)),
     showType: Util.ShowType.MYLIST,
     mylists: MyListsStore,
     urlStore: UrlStore,
@@ -37,8 +36,8 @@ const RootStore = types.model({
         else if(self.isShowingMovie) {
             return self.singleMoviesStore.movies.slice().reverse();
         } else {
-            if(self.showing) {
-                return self.showing.movies;
+            if(self.mylists.showing) {
+                return self.mylists.showing.movies;
             }
         }
 
@@ -53,15 +52,15 @@ const RootStore = types.model({
 })).actions(self => {
     function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;
-        self.showing = mylist;
+        self.mylists.showing = mylist;
     }
     function setShowingHistory() {
         self.showType = Util.ShowType.HISTORY;
-        self.showing = null;
+        self.mylists.showing = null;
     }
     function setShowingMovie() {
         self.showType = Util.ShowType.MOVIE;
-        self.showing = null;
+        self.mylists.showing = null;
     }
 
     function moveToNextMylist(e) {
@@ -76,22 +75,22 @@ const RootStore = types.model({
         offset = -offset;
 
         if (self.mylists.keys.length > 0) {
-            if(self.showing && self.showType === Util.ShowType.MYLIST) {
+            if(self.mylists.showing && self.showType === Util.ShowType.MYLIST) {
                 // find next
-                const currentIndex = self.mylists.keys.indexOf(self.showing.id);
+                const currentIndex = self.mylists.keys.indexOf(self.mylists.showing.id);
                 const maxIndex = self.mylists.keys.length-1;
                 let nextIndex = currentIndex+offset;
                 if(nextIndex < 0){ nextIndex = 0 }
                 if(maxIndex < nextIndex) { nextIndex = maxIndex; }
 
                 if(currentIndex !== nextIndex) {
-                    self.showing = self.mylists.keys[nextIndex];
+                    self.mylists.showing = self.mylists.keys[nextIndex];
                     self.movieIndex.clear()
                 }
 
             } else {
                 // reverse index
-                self.showing = self.mylists.keys[self.mylists.keys.length-1];
+                self.mylists.showing = self.mylists.keys[self.mylists.keys.length-1];
                 self.showType = Util.ShowType.MYLIST;
                 self.movieIndex.clear()
             }
@@ -113,8 +112,8 @@ const RootStore = types.model({
         if(nextIndex < 0) { nextIndex = 0; }
 
         let maxIndex = 0;
-        if(self.showing && self.showType === Util.ShowType.MYLIST) {
-            maxIndex = self.showing.movies.length-1
+        if(self.mylists.showing && self.showType === Util.ShowType.MYLIST) {
+            maxIndex = self.mylists.showing.movies.length-1
         } else {
             if(self.showType === Util.ShowType.HISTORY) {
                 maxIndex = self.historyStore.movies.length -1

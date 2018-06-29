@@ -5,6 +5,7 @@ import Util from "../Util";
 const MyListsStore = types.model({
     lists: types.optional(types.map(MyListStore), {}), // not save order
     keys: types.optional(types.array(types.string), []), // save order
+    showing: types.maybe(types.reference(MyListStore)),
 }).views(self => ({
 
     get(id_or_url) {
@@ -36,8 +37,14 @@ const MyListsStore = types.model({
         self.keys.push(id);
     }
 
-    function remove(id) {
-        self.lists.delete(Util.normalizeMylistId(id));
+    function remove(id_or_url) {
+        const id = Util.normalizeMylistId(id_or_url);
+
+        if(self.showing && self.showing.id === id){
+            self.showing = null;
+        }
+
+        self.lists.delete(id);
 
         const index = self.keys.indexOf(id);
         self.keys.splice(index, 1) ;
