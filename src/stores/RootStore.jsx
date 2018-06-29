@@ -7,6 +7,7 @@ import Util from "../Util";
 import HistoryStore from "./HistoryStore";
 import MovieListStore from "./MovieListStore";
 import SingleMoviesStore from "./SingleMoviesStore";
+import ContextStore from "./ContextStore";
 
 
 const RootStore = types.model({
@@ -18,6 +19,7 @@ const RootStore = types.model({
     movieListStore: MovieListStore,
     singleMoviesStore: SingleMoviesStore,
     movieIndex: IndexStore,
+    contextStore: ContextStore,
 
 }).views(self => ({
     get isShowingHistory() {

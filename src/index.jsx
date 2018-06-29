@@ -6,11 +6,15 @@ import App from './components/App.jsx'
 import MyListsStore from './stores/MyListsStore'
 import UrlStore from "./stores/UrlStore";
 import RootStore from "./stores/RootStore";
-import ErrorStore from "./stores/ErrorStore";
-import {onSnapshot, getSnapshot } from "mobx-state-tree";
+import MessageStore from "./stores/MessageStore";
+import {getSnapshot } from "mobx-state-tree";
 import storage from 'electron-json-storage';
 import IndexStore from "./stores/IndexStore";
 import isDev from 'electron-is-dev';
+import HistoryStore from "./stores/HistoryStore";
+import MovieListStore from "./stores/MovieListStore";
+import SingleMoviesStore from "./stores/SingleMoviesStore";
+import ContextStore from "./stores/ContextStore";
 
 let stateFileName = 'state.json';
 if (isDev) {
@@ -25,22 +29,26 @@ storage.get(stateFileName, (error, data) => {
         // new
         stores = {
             root: RootStore.create({
-                mylists: MyListsStore.create({lists: {}}),
+                mylists: MyListsStore.create(),
                 urlStore: UrlStore.create({url: "http://www.nicovideo.jp/mylist/56168136"}),
+                historyStore: HistoryStore.create(),
+                singleMoviesStore: SingleMoviesStore.create(),
+                movieListStore: MovieListStore.create(),
+                movieIndex: IndexStore.create(),
+                contextStore: ContextStore.create({lastUpdatedAt: new Date()}),
             }),
-            movieIndex: IndexStore.create(),
-            urlStoreError: ErrorStore.create(),
+            urlMessageStore: MessageStore.create(),
         };
     } else {
         // from state file
         stores = {
             root: RootStore.create(data),
-            movieIndex: IndexStore.create(),
-            urlStoreError: ErrorStore.create(),
+            urlMessageStore: MessageStore.create(),
         }
     }
     // save state before close
     ipcRenderer.on("app-close", (ev) => {
+        stores.root.contextStore.update();
         const snapshot = getSnapshot(stores.root);
         storage.set(stateFileName, snapshot, error => {
             if (error) throw error;
