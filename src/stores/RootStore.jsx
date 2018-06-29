@@ -134,10 +134,17 @@ const RootStore = types.model({
         }
     }
 
+    function reloadCurrentMylist() {
+        const current = self.mylists.showing;
+        if(current) {
+            current.update(self.movieListStore)
+        }
+    }
+
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToMylist, moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
-        toggleWatchedForCurrent,
+        toggleWatchedForCurrent, reloadCurrentMylist,
     }
 });
 
