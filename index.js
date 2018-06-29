@@ -22,12 +22,10 @@ app.on('ready', () => {
         }
     });
 
-
 });
 
 
 ipcMain.on('open', (ev, url) => {
-    console.log("main url : " + url);
     shell.openExternal(url);
 });
 
@@ -43,3 +41,8 @@ ipcMain.on('closed', e => {
         app.quit();
     }
 });
+
+ipcMain.on('openBackground', (ev, url) => {
+    shell.openExternal(url, {activate: false});
+});
+
