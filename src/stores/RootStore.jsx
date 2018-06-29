@@ -88,7 +88,8 @@ const RootStore = types.model({
                 }
 
             } else {
-                self.showing = self.mylists.keys[0];
+                // reverse index
+                self.showing = self.mylists.keys[self.mylists.keys.length-1];
                 self.showType = Util.ShowType.MYLIST;
                 self.movieIndex.clear()
             }
