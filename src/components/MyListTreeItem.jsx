@@ -104,8 +104,11 @@ class MyListTreeItem extends Component {
     handleClick(e) {
         const { root, mylist} = this.props;
         const { movieIndex } = root;
-        movieIndex.clear();
-        root.setShowing(mylist);
+
+        if(!mylist.updating) {
+            movieIndex.clear();
+            root.setShowing(mylist);
+        }
     }
 
     handleDoubleClick(e) {
