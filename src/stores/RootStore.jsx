@@ -125,9 +125,17 @@ const RootStore = types.model({
 
     }
 
+    function toggleWatchedForCurrent() {
+        const movie =self.currentMovie;
+        if(movie) {
+            movie.toggleWatched()
+        }
+    }
+
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToMylist, moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
+        toggleWatchedForCurrent,
     }
 });
 

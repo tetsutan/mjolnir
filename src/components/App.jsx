@@ -31,10 +31,10 @@ export default class App extends React.Component {
             }
 
         });
+        Mousetrap.bind(['w'], root.toggleWatchedForCurrent);
     }
 
     componentWillUnmount() {
-        const { root } = this.props;
         Mousetrap.unbind(['s']);
         Mousetrap.unbind(['a']);
         Mousetrap.unbind(['j']);
