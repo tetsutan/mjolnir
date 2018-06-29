@@ -8,6 +8,7 @@ const MessageStore = types.model({
     }
 }))
     .actions(self => {
+        let timeoutID;
         function set(m) {
             self.message = m;
         }
@@ -16,7 +17,10 @@ const MessageStore = types.model({
             self.message = "";
         }
         function clearAfter(sec) {
-            setTimeout(() => {
+            if(timeoutID) {
+                clearTimeout(timeoutID)
+            }
+            timeoutID = setTimeout(() => {
                 self.clear();
             }, sec * 1000);
         }
