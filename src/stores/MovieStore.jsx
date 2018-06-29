@@ -24,6 +24,7 @@ const MovieStore = types.model({
     date: "",
     description: "",
 
+    updating: false,
     watched: false,
 
     // isLargeThumbnail: false, TODO
@@ -43,7 +44,8 @@ const MovieStore = types.model({
 
     function fetch() {
 
-        if (self.id) {
+        if (self.id && !self.updating) {
+            self.setUpdating(true);
 
             // http://ext.nicovideo.jp/api/getthumbinfo/sm21520922
             axios.get(`/api/getthumbinfo/${self.id}`).then(res => {
@@ -71,8 +73,12 @@ const MovieStore = types.model({
 
                 }
 
+                self.setUpdating(false);
+
             }).catch(e => {
                 console.log(e);
+                self.updateTitle("Error id=" + self.id);
+                self.setUpdating(false);
             });
 
         }
@@ -103,6 +109,9 @@ const MovieStore = types.model({
         self.description = v;
     }
 
+    function setUpdating(b) {
+        self.updating = b;
+    }
     function setWatched() {
         self.watched = true;
     }
@@ -114,7 +123,7 @@ const MovieStore = types.model({
 
     return {update, fetch, updateTitle, updateThumbnailUrl,
         updateUserName, updateUserIcon, updateDate, updateDescription,
-        setWatched, toggleWatched,
+        setUpdating, setWatched, toggleWatched,
     }
 });
 

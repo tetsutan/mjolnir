@@ -8,6 +8,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import red from '@material-ui/core/colors/red';
 
 import ClassNames from 'classnames';
 import {DragSource, DropTarget} from "react-dnd";
@@ -16,12 +18,30 @@ const Menu = remote.Menu;
 const MenuItem = remote.MenuItem;
 
 const styles = theme => ({
+    container: {
+
+        position: 'relative'
+    },
     listItem: {
         padding: 15,
     },
     active: {
         backgroundColor: theme.palette.action.selected
-    }
+    },
+    progress: {
+        position: 'absolute',
+        backgroundColor: red[100],
+        width: '100%',
+        height: '100%',
+        opacity: '0.5',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    progressIcon: {
+        color: 'white',
+    },
+
 });
 
 const sourceSpec = {
@@ -89,14 +109,15 @@ class MyListTreeItem extends Component {
     }
 
     handleDoubleClick(e) {
-        const { mylist } = this.props;
-        mylist.update();
+        const { root, mylist } = this.props;
+        const { movieListStore } = root;
+        mylist.update(movieListStore);
     }
 
     handleContextMenu(e){
         e.preventDefault();
         const { root, mylist } = this.props;
-        const { mylists } = root;
+        const { mylists, movieListStore} = root;
 
         const menu = new Menu();
         menu.append(new MenuItem({
@@ -106,7 +127,7 @@ class MyListTreeItem extends Component {
         menu.append(new MenuItem({type: 'separator'}));
         menu.append(new MenuItem({
             label: 'Refresh',
-            click() { mylist.update() },
+            click() { mylist.update(movieListStore) },
         }));
 
         menu.popup({window: remote.getCurrentWindow()});
@@ -121,7 +142,6 @@ class MyListTreeItem extends Component {
             [classes.active]: root.showing && root.showing.id === mylist.id,
         });
 
-        const updateView = mylist.updating ? <div>updating</div> : "";
         const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";
 
         const dragView = connectDragSource(connectDropTarget(
@@ -133,15 +153,22 @@ class MyListTreeItem extends Component {
             </div>
         ));
 
+        const progressView = mylist.updating ?
+            (<div className={classes.progress}>
+                <CircularProgress className={classes.progressIcon} thickness={8} size={30}/>
+            </div>) : <div />;
+
         return (
-            <ListItem button className={className}
-                      onClick={this.handleClick}
-                      onDoubleClick={this.handleDoubleClick}
-                      onContextMenu={this.handleContextMenu}
-            >
-                {dragView}
-                {updateView}
-            </ListItem>
+            <div className={classes.container}>
+                {progressView}
+                <ListItem button className={className}
+                          onClick={this.handleClick}
+                          onDoubleClick={this.handleDoubleClick}
+                          onContextMenu={this.handleContextMenu}
+                >
+                    {dragView}
+                </ListItem>
+            </div>
         );
     }
 }

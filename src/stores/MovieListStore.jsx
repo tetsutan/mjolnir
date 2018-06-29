@@ -9,9 +9,13 @@ const MovieListStore = types.model({
     }
 })).actions(self => {
     function add(movieId) {
-        const movie = MovieStore.create({id: movieId});
+        if(!self.movies.has(movieId)) {
+            const movie = MovieStore.create({id: movieId});
+            self.movies.set(movieId, movie);
+        }
+
+        const movie = self.movies.get(movieId);
         movie.update();
-        self.movies.set(movieId, movie);
     }
     return {add}
 });
