@@ -164,10 +164,11 @@ class MovieList extends Component {
                                     [classes.card]: true,
                                     [classes.cardSelected]: movieIndex.is(index),
                                 })} >
-                                    <CardMedia
-                                        className={classes.cover}
-                                        image={movie.thumbnailUrl}
-                                    />
+                                    {movie.thumbnailUrl ? <CardMedia
+                                            className={classes.cover}
+                                            image={movie.thumbnailUrl}
+                                        /> : <div className={classes.cover} />
+                                    }
                                     <div className={classes.details}>
                                         <CardContent className={classes.content}>
                                             <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
