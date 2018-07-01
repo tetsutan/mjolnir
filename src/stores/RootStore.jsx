@@ -53,21 +53,24 @@ const RootStore = types.model({
     function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;
         self.mylists.showing = mylist;
+        self.mylists.showingIndex = self.mylists.keys.indexOf(self.mylists.showing.id);
     }
     function setShowingHistory() {
         self.showType = Util.ShowType.HISTORY;
         self.mylists.showing = null;
+        self.mylists.showingIndex = -1;
     }
     function setShowingMovie() {
         self.showType = Util.ShowType.MOVIE;
         self.mylists.showing = null;
+        self.mylists.showingIndex = -1;
     }
 
     function moveToNextMylist(e) {
-        self.moveToMylist(1)
+        self.moveToMylist(-1)
     }
     function moveToPrevMylist(e) {
-        self.moveToMylist(-1)
+        self.moveToMylist(1)
     }
     function moveToMylist(offset) {
 
@@ -77,7 +80,8 @@ const RootStore = types.model({
         if (self.mylists.keys.length > 0) {
             if(self.mylists.showing && self.showType === Util.ShowType.MYLIST) {
                 // find next
-                const currentIndex = self.mylists.keys.indexOf(self.mylists.showing.id);
+                //const currentIndex = self.mylists.keys.indexOf(self.mylists.showing.id);
+                const currentIndex = self.mylists.showingIndex;
                 const maxIndex = self.mylists.keys.length-1;
                 let nextIndex = currentIndex+offset;
                 if(nextIndex < 0){ nextIndex = 0 }
@@ -85,12 +89,15 @@ const RootStore = types.model({
 
                 if(currentIndex !== nextIndex) {
                     self.mylists.showing = self.mylists.keys[nextIndex];
+                    self.mylists.showingIndex = nextIndex;
                     self.movieIndex.clear()
                 }
 
             } else {
                 // reverse index
-                self.mylists.showing = self.mylists.keys[self.mylists.keys.length-1];
+                const nextIndex = 0;
+                self.mylists.showing = self.mylists.keys[nextIndex];
+                self.mylists.showingIndex = nextIndex;
                 self.showType = Util.ShowType.MYLIST;
                 self.movieIndex.clear()
             }

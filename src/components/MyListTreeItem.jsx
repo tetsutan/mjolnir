@@ -99,6 +99,8 @@ class MyListTreeItem extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
+
+        this.scrollToSection = this.scrollToSection.bind(this);
     }
 
     handleClick(e) {
@@ -136,6 +138,12 @@ class MyListTreeItem extends Component {
         menu.popup({window: remote.getCurrentWindow()});
     }
 
+    scrollToSection(section) {
+        // dom element
+        if(section) {
+            section.scrollIntoView({block: "nearest"});
+        }
+    }
 
     render() {
         const { classes, root, mylist, isDragging, connectDragSource, connectDropTarget } = this.props;
@@ -162,7 +170,12 @@ class MyListTreeItem extends Component {
             </div>) : <div />;
 
         return (
-            <div className={classes.container}>
+            <div className={classes.container}
+                 ref={(section) => {
+                     if(root.mylists.showing && root.mylists.showing.id === mylist.id){
+                         this.scrollToSection(section);
+                     }
+                 }}>
                 {progressView}
                 <ListItem button className={className}
                           onClick={this.handleClick}

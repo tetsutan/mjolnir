@@ -6,6 +6,7 @@ const MyListsStore = types.model({
     lists: types.optional(types.map(MyListStore), {}), // not save order
     keys: types.optional(types.array(types.string), []), // save order
     showing: types.maybe(types.reference(MyListStore)),
+    showingIndex: -1, // for keys
 }).views(self => ({
 
     get(id_or_url) {
@@ -17,12 +18,8 @@ const MyListsStore = types.model({
     },
 
     get reverse() {
-        return self.keys.slice().reverse().map(k => self.lists.get(k))
-    },
-
-    get all() {
         return self.keys.map(k => self.lists.get(k))
-    }
+    },
 
 })).actions(self => {
 
@@ -33,7 +30,7 @@ const MyListsStore = types.model({
             const mylist = MyListStore.create({id: id});
             mylist.update(movieListStore);
             self.lists.set(id, mylist);
-            self.keys.push(id);
+            self.keys.unshift(id);
         }
     }
 
@@ -42,6 +39,7 @@ const MyListsStore = types.model({
 
         if(self.showing && self.showing.id === id){
             self.showing = null;
+            self.showingIndex = -1;
         }
 
         self.lists.delete(id);
