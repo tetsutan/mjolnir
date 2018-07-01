@@ -34,6 +34,7 @@ export default class App extends React.Component {
         });
         Mousetrap.bind(['w'], root.toggleWatchedForCurrent);
         Mousetrap.bind(['r'], root.reloadCurrentMylist);
+        Mousetrap.bind(['del'], root.deleteCurrent);
     }
 
     componentWillUnmount() {

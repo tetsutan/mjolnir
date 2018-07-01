@@ -14,6 +14,7 @@ import red from '@material-ui/core/colors/red';
 
 import ClassNames from 'classnames';
 import {DragSource, DropTarget} from "react-dnd";
+import {isAlive} from "mobx-state-tree";
 
 const Menu = remote.Menu;
 const MenuItem = remote.MenuItem;
@@ -142,8 +143,10 @@ class MyListTreeItem extends Component {
     }
 
     scrollToSection(section) {
+        const { mylist } = this.props;
         // dom element
-        if(section) {
+        // mylist maybe destroyed because from `ref`
+        if(isAlive(mylist) && mylist.showingIndex !== -1 && mylist.showing && section) {
             section.scrollIntoView({block: "nearest"});
         }
     }
@@ -178,9 +181,7 @@ class MyListTreeItem extends Component {
         return (
             <div className={classes.container}
                  ref={(section) => {
-                     if(mylist.showing){
-                         this.scrollToSection(section);
-                     }
+                     this.scrollToSection(section);
                  }}>
                 {progressView}
                 <ListItem button className={className}

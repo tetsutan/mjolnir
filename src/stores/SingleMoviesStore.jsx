@@ -5,6 +5,9 @@ import Util from "../Util";
 const SingleMoviesStore = types.model({
     movies: types.optional(types.array(types.reference(MovieStore)), []),
 }).views(self => ({
+    get(index) {
+        return self.movies[index];
+    }
 })).actions(self => {
 
     // function add(movie) {
@@ -19,7 +22,11 @@ const SingleMoviesStore = types.model({
         self.movies.push(movie);
     }
 
-    return {add}
+    function removeFromIndex(index) {
+        self.movies.splice(index, 1) ;
+    }
+
+    return {add, removeFromIndex}
 });
 
 export default SingleMoviesStore;

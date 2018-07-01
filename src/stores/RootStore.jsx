@@ -1,4 +1,5 @@
-import {types} from "mobx-state-tree"
+import {types} from "mobx-state-tree";
+import {dialog} from 'electron';
 import MyListsStore from "./MyListsStore";
 import MyListStore from "./MyListStore";
 import UrlStore from "./UrlStore";
@@ -112,16 +113,47 @@ const RootStore = types.model({
     }
 
     function reloadCurrentMylist() {
-        const current = self.mylists.showing;
-        if(current) {
-            current.updateForce(self.movieListStore)
+
+        if (self.mylists.showingIndex !== -1) {
+            const current = self.mylists.showing;
+            if (current) {
+                current.updateForce(self.movieListStore)
+            }
         }
+    }
+
+    function deleteCurrent() {
+
+        if (self.mylists.showingIndex !== -1) {
+            const current = self.mylists.showing;
+            if(current) {
+                if(confirm("delete? [id: "+current.id+", title: "+current.title+"]")) {
+                    self.mylists.remove(current.id)
+                }
+            }
+        } else {
+            if(self.isShowingHistory) {
+                const current = self.historyStore.get(self.movieIndex.index);
+                if(current && confirm("delete? [id: "+current.id+", title: "+current.title+"]")) {
+                    self.historyStore.removeFromIndex(self.movieIndex.index);
+                }
+
+            }
+            else if(self.isShowingMovie) {
+                const current = self.singleMoviesStore.get(self.movieIndex.index);
+                if(current && confirm("delete? [id: "+current.id+", title: "+current.title+"]")) {
+                    self.singleMoviesStore.removeFromIndex(self.movieIndex.index);
+                }
+            }
+        }
+
     }
 
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
+        deleteCurrent,
     }
 });
 
