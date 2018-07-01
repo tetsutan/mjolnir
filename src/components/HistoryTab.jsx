@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
+import {remote} from 'electron'
 
 import { withStyles } from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,6 +10,8 @@ import HistoryIcon from '@material-ui/icons/History';
 
 import classNames from 'classnames';
 
+const Menu = remote.Menu;
+const MenuItem = remote.MenuItem;
 
 const styles = theme => ({
     listtree: {
@@ -40,6 +43,7 @@ class HistoryTab extends Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.handleContextMenu = this.handleContextMenu.bind(this);
     }
 
     handleClick(e) {
@@ -49,10 +53,31 @@ class HistoryTab extends Component {
         root.setShowingHistory();
     }
 
+    handleContextMenu(e){
+        e.preventDefault();
+        const { root } = this.props;
+        // const { mylists, movieListStore} = root;
+
+        const menu = new Menu();
+        menu.append(new MenuItem({
+            label: 'Clear all',
+            click() { root.historyStore.clear() },
+        }));
+        menu.append(new MenuItem({
+            label: 'Clear older 100',
+            click() { root.historyStore.clearOlder(100) },
+        }));
+
+        menu.popup({window: remote.getCurrentWindow()});
+    }
+
     render() {
         const { classes, root } = this.props;
         return (
-            <ListItem button onClick={this.handleClick} className={classNames({
+            <ListItem button
+                      onClick={this.handleClick}
+                      onContextMenu={this.handleContextMenu}
+                      className={classNames({
                 [classes.active]: root.isShowingHistory,
                 [classes.listheader]: true,
             })}>

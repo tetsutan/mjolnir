@@ -18,8 +18,19 @@ const HistoryStore = types.model({
         self.movies.splice(index, 1) ;
     }
 
+    function clear() {
+        self.movies.clear()
+    }
 
-    return {add, removeFromIndex}
+    function clearOlder(n) {
+        const len = self.movies.length;
+        if(len >= n) {
+            self.movies.splice(0, self.movies.length - n + 1)
+        }
+    }
+
+
+    return {add, removeFromIndex, clear, clearOlder}
 });
 
 export default HistoryStore;
