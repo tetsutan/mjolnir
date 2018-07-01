@@ -116,8 +116,8 @@ const MovieStore = types.model({
     function setUpdating(b) {
         self.updating = b;
     }
-    function setWatched() {
-        self.watched = true;
+    function setWatched(w=true) {
+        self.watched = w;
     }
     function toggleWatched() {
         self.watched = !self.watched

@@ -130,13 +130,22 @@ class MyListTreeItem extends Component {
 
         const menu = new Menu();
         menu.append(new MenuItem({
+            label: 'Refresh',
+            click() { mylist.updateForce(movieListStore) },
+        }));
+        menu.append(new MenuItem({type: 'separator'}));
+        menu.append(new MenuItem({
             label: 'Remove',
             click() { mylists.remove(mylist.id) },
         }));
         menu.append(new MenuItem({type: 'separator'}));
         menu.append(new MenuItem({
-            label: 'Refresh',
-            click() { mylist.updateForce(movieListStore) },
+            label: 'Mark all watched',
+            click() { mylist.movies.forEach(m => m.setWatched()) },
+        }));
+        menu.append(new MenuItem({
+            label: 'Mark all unwatched',
+            click() { mylist.movies.forEach(m => m.setWatched(false)) },
         }));
 
         menu.popup({window: remote.getCurrentWindow()});
