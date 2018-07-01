@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
@@ -16,6 +16,8 @@ import ListItem from '@material-ui/core/ListItem';
 import classNames from 'classnames';
 import Avatar from "@material-ui/core/Avatar";
 
+const Menu = remote.Menu;
+const MenuItem = remote.MenuItem;
 
 const styles = theme => ({
     list: {
@@ -93,6 +95,7 @@ class MovieList extends Component {
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.watchedColor = this.watchedColor.bind(this);
+        this.handleContextMenu = this.handleContextMenu.bind(this);
 
         this.scrollToSection = this.scrollToSection.bind(this);
     }
@@ -103,22 +106,56 @@ class MovieList extends Component {
         movieIndex.set(index);
     }
 
-    handleDoubleClick(e, index) {
+    handleDoubleClick(e, movie) {
         e.preventDefault();
         e.stopPropagation();
 
-        const { classes, root } = this.props;
-        const { mylists, historyStore } = root;
+        const { root } = this.props;
+        const { historyStore } = root;
 
-        const movies = root.currentMovies;
-
-        const movie = movies.get(index);
         if (movie) {
             movie.setWatched();
             historyStore.add(movie);
             ipcRenderer.send("open", movie.url);
         }
 
+    }
+
+    handleContextMenu(e, index, movie){
+        e.preventDefault();
+        const { root } = this.props;
+
+        const menu = new Menu();
+        if(!movie.watched) {
+            menu.append(new MenuItem({
+                label: 'Set watched',
+                click() { movie.setWatched() },
+            }));
+        } else {
+            menu.append(new MenuItem({
+                label: 'Set unwatched',
+                click() { movie.setWatched(false) },
+            }));
+        }
+
+        if(root.isShowingHistory || root.isShowingMovie) {
+            menu.append(new MenuItem({
+                label: 'Remove',
+                click() {
+                    if(confirm("delete? [id: "+movie.id+", title: "+movie.title+"]")) {
+                        if (root.isShowingHistory) {
+                            root.historyStore.removeFromIndex(index)
+                        }
+                        else if (root.isShowingMovie) {
+                            root.singleMoviesStore.removeFromIndex(index)
+                        }
+                    }
+
+                },
+            }));
+        }
+
+        menu.popup({window: remote.getCurrentWindow()});
     }
 
     scrollToSection(section) {
@@ -157,8 +194,10 @@ class MovieList extends Component {
                              }}>
                             <ListItem
                                 className={classes.listItem}
-                                onDoubleClick={e => this.handleDoubleClick(e, index)}
-                                onClick={e => this.handleClick(e, index)}>
+                                onDoubleClick={e => this.handleDoubleClick(e, movie)}
+                                onClick={e => this.handleClick(e, index)}
+                                onContextMenu={e => this.handleContextMenu(e, index, movie)}
+                            >
 
                                 <Card className={classNames({
                                     [classes.card]: true,
