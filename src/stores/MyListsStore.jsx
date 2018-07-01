@@ -124,12 +124,15 @@ const MyListsStore = types.model({
     }
 
     function clearShowingIndex() {
-        const currentShowing = self.showing;
-        if(currentShowing) {
-            currentShowing.showing = false;
-        }
 
-        self.showingIndex = -1;
+        if(self.showingIndex !== -1) {
+            const currentShowing = self.showing;
+            if(currentShowing) {
+                currentShowing.showing = false;
+            }
+
+            self.showingIndex = -1;
+        }
     }
 
     return {add, remove, moveTo, positionToMylist, setShowing, clearShowingIndex}
