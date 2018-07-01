@@ -149,11 +149,11 @@ class MyListTreeItem extends Component {
     }
 
     render() {
-        const { classes, root, mylist, isDragging, connectDragSource, connectDropTarget } = this.props;
+        const { classes, mylist, isDragging, connectDragSource, connectDropTarget } = this.props;
 
         const className = ClassNames({
             [classes.listItem]: true,
-            [classes.active]: root.mylists.showing && root.mylists.showing.id === mylist.id,
+            [classes.active]: mylist.showing,
         });
 
         const primaryColor = mylist.unwatchCount > 0 ? "inherit" : "textSecondary";
@@ -178,7 +178,7 @@ class MyListTreeItem extends Component {
         return (
             <div className={classes.container}
                  ref={(section) => {
-                     if(root.mylists.showing && root.mylists.showing.id === mylist.id){
+                     if(mylist.showing){
                          this.scrollToSection(section);
                      }
                  }}>

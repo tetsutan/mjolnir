@@ -52,56 +52,26 @@ const RootStore = types.model({
 })).actions(self => {
     function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;
-        self.mylists.showing = mylist;
-        self.mylists.showingIndex = self.mylists.keys.indexOf(self.mylists.showing.id);
+        self.mylists.setShowing(mylist)
     }
     function setShowingHistory() {
         self.showType = Util.ShowType.HISTORY;
-        self.mylists.showing = null;
-        self.mylists.showingIndex = -1;
+        self.mylists.clearShowingIndex();
     }
     function setShowingMovie() {
         self.showType = Util.ShowType.MOVIE;
-        self.mylists.showing = null;
-        self.mylists.showingIndex = -1;
+        self.mylists.clearShowingIndex();
     }
 
     function moveToNextMylist(e) {
-        self.moveToMylist(-1)
+        self.mylists.positionToMylist(-1);
+        self.showType = Util.ShowType.MYLIST;
+        self.movieIndex.clear();
     }
     function moveToPrevMylist(e) {
-        self.moveToMylist(1)
-    }
-    function moveToMylist(offset) {
-
-        // mylists.keys's index is reversed on view
-        offset = -offset;
-
-        if (self.mylists.keys.length > 0) {
-            if(self.mylists.showing && self.showType === Util.ShowType.MYLIST) {
-                // find next
-                //const currentIndex = self.mylists.keys.indexOf(self.mylists.showing.id);
-                const currentIndex = self.mylists.showingIndex;
-                const maxIndex = self.mylists.keys.length-1;
-                let nextIndex = currentIndex+offset;
-                if(nextIndex < 0){ nextIndex = 0 }
-                if(maxIndex < nextIndex) { nextIndex = maxIndex; }
-
-                if(currentIndex !== nextIndex) {
-                    self.mylists.showing = self.mylists.keys[nextIndex];
-                    self.mylists.showingIndex = nextIndex;
-                    self.movieIndex.clear()
-                }
-
-            } else {
-                // reverse index
-                const nextIndex = 0;
-                self.mylists.showing = self.mylists.keys[nextIndex];
-                self.mylists.showingIndex = nextIndex;
-                self.showType = Util.ShowType.MYLIST;
-                self.movieIndex.clear()
-            }
-        }
+        self.mylists.positionToMylist(1);
+        self.movieIndex.clear();
+        self.showType = Util.ShowType.MYLIST;
     }
 
     function moveToNextMovie(e) {
@@ -149,7 +119,7 @@ const RootStore = types.model({
     }
 
     return {setShowing, setShowingHistory, setShowingMovie,
-        moveToMylist, moveToNextMylist, moveToPrevMylist,
+        moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
     }

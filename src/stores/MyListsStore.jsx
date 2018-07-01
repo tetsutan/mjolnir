@@ -5,7 +5,6 @@ import Util from "../Util";
 const MyListsStore = types.model({
     lists: types.optional(types.map(MyListStore), {}), // not save order
     keys: types.optional(types.array(types.string), []), // save order
-    showing: types.maybe(types.reference(MyListStore)),
     showingIndex: -1, // for keys
 }).views(self => ({
 
@@ -19,6 +18,24 @@ const MyListsStore = types.model({
 
     get reverse() {
         return self.keys.map(k => self.lists.get(k))
+    },
+
+    get length() {
+        return self.keys.length;
+    },
+
+    get showing() {
+        if(self.showingIndex === -1) {
+            return null;
+        }
+        return self.lists.get(self.keys[self.showingIndex])
+    },
+
+    isShowing(mylist) {
+        if(self.showingIndex === -1) {
+            return false
+        }
+        return self.keys.indexOf(mylist.id) === self.showingIndex
     },
 
 })).actions(self => {
@@ -38,7 +55,6 @@ const MyListsStore = types.model({
         const id = Util.normalizeMylistId(id_or_url);
 
         if(self.showing && self.showing.id === id){
-            self.showing = null;
             self.showingIndex = -1;
         }
 
@@ -58,7 +74,65 @@ const MyListsStore = types.model({
         }
     }
 
-    return {add, remove, moveTo}
+    function positionToMylist(offset) {
+
+        // mylists.keys's index is reversed on view
+        offset = -offset;
+
+        if (self.length > 0) {
+            if(self.showingIndex !== -1) {
+                // find next
+                const currentIndex = self.showingIndex;
+                const maxIndex = self.length-1;
+                let nextIndex = currentIndex+offset;
+                if(nextIndex < 0){ nextIndex = 0 }
+                if(maxIndex < nextIndex) { nextIndex = maxIndex; }
+
+                if(currentIndex !== nextIndex) {
+                    const currentShowing = self.showing;
+                    if(currentShowing) {
+                        currentShowing.showing = false;
+                    }
+                    self.lists.get(self.keys[nextIndex]).showing = true;
+                    self.showingIndex = nextIndex;
+                }
+
+            }
+            else {
+                // reverse index
+                const nextIndex = 0;
+
+                const currentShowing = self.showing;
+                if(currentShowing) {
+                    currentShowing.showing = false;
+                }
+                self.lists.get(self.keys[nextIndex]).showing = true;
+                self.showingIndex = nextIndex;
+            }
+        }
+    }
+
+    function setShowing(mylist) {
+
+        const currentShowing = self.showing;
+        if(currentShowing) {
+            currentShowing.showing = false;
+        }
+
+        self.showingIndex = self.keys.indexOf(mylist.id);
+        mylist.showing = true;
+    }
+
+    function clearShowingIndex() {
+        const currentShowing = self.showing;
+        if(currentShowing) {
+            currentShowing.showing = false;
+        }
+
+        self.showingIndex = -1;
+    }
+
+    return {add, remove, moveTo, positionToMylist, setShowing, clearShowingIndex}
 });
 
 export default MyListsStore;

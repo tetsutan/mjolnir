@@ -21,7 +21,8 @@ const MyListStore = types.model({
     title: types.optional(types.string, ""),
     author: "",
     movies: types.optional(types.array(types.reference(MovieStore)), []),
-    updating: false
+    updating: false,
+    showing: false,
 }).views(self => ({
     get url() {
         return `http://www.nicovideo.jp/mylist/${self.id}`
