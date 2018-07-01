@@ -36,14 +36,14 @@ const MovieStore = types.model({
     },
 
 })).actions(self => {
-    function update() {
 
-        if(self.id) {
-            self.fetch()
-        }
+    function updateForce() {
+        self.updating = false;
+        self.update();
     }
 
-    function fetch() {
+
+    function update() {
 
         if (self.id && !self.updating) {
             self.setUpdating(true);
@@ -53,7 +53,6 @@ const MovieStore = types.model({
                 const xml = parseXml(res.data);
                 const nicovideo_thumb_response = xml.children[0];
 
-                console.log(nicovideo_thumb_response);
                 if (nicovideo_thumb_response && nicovideo_thumb_response.children) {
 
                     // find thumb
@@ -126,7 +125,7 @@ const MovieStore = types.model({
 
     // private
 
-    return {update, fetch, updateTitle, updateThumbnailUrl,
+    return {update, updateForce, updateTitle, updateThumbnailUrl,
         updateUserName, updateUserIcon, updateDate, updateDescription, updateLength,
         setUpdating, setWatched, toggleWatched,
     }

@@ -57,7 +57,7 @@ class MyListTree extends Component {
         const { mylists } = root;
 
         mylists.reverse.forEach(mylist => {
-            mylist.update();
+            mylist.updateForce();
         });
 
     }

@@ -29,7 +29,15 @@ const MyListStore = types.model({
     get unwatchCount() {
         return self.movies.filter(m => !m.watched).length
     },
+    get updatingMovieCount() {
+        return self.movies.filter(m => m.updating).length
+    },
 })).actions(self => {
+
+    function updateForce(movieListStore) {
+        self.updating = false;
+        self.update(movieListStore);
+    }
 
     function update(movieListStore) {
         if (self.id && !self.updating) {
@@ -113,7 +121,7 @@ const MyListStore = types.model({
         return title;
     }
 
-    return {update, fetch, updateTitle, updateAuthor, updateMovies, setUpdating}
+    return {update, updateForce, fetch, updateTitle, updateAuthor, updateMovies, setUpdating}
 });
 
 export default MyListStore;

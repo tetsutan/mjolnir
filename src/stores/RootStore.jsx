@@ -144,7 +144,7 @@ const RootStore = types.model({
     function reloadCurrentMylist() {
         const current = self.mylists.showing;
         if(current) {
-            current.update(self.movieListStore)
+            current.updateForce(self.movieListStore)
         }
     }
 

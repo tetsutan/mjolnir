@@ -12,10 +12,13 @@ const MovieListStore = types.model({
         if(!self.movies.has(movieId)) {
             const movie = MovieStore.create({id: movieId});
             self.movies.set(movieId, movie);
+            movie.update();
+        }
+        else {
+            const movie = self.movies.get(movieId);
+            movie.updateForce();
         }
 
-        const movie = self.movies.get(movieId);
-        movie.update();
     }
     return {add}
 });

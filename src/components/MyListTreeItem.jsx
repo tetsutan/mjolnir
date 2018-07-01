@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import red from '@material-ui/core/colors/red';
 
 import ClassNames from 'classnames';
@@ -29,6 +30,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.action.selected
     },
     progress: {
+        flexGrow: 1,
         position: 'absolute',
         backgroundColor: red[100],
         width: '100%',
@@ -39,7 +41,8 @@ const styles = theme => ({
         alignItems: 'center',
     },
     progressIcon: {
-        color: 'white',
+        width: '100%',
+        height: '10px',
     },
 
 });
@@ -116,7 +119,7 @@ class MyListTreeItem extends Component {
     handleDoubleClick(e) {
         const { root, mylist } = this.props;
         const { movieListStore } = root;
-        mylist.update(movieListStore);
+        mylist.updateForce(movieListStore);
     }
 
     handleContextMenu(e){
@@ -132,7 +135,7 @@ class MyListTreeItem extends Component {
         menu.append(new MenuItem({type: 'separator'}));
         menu.append(new MenuItem({
             label: 'Refresh',
-            click() { mylist.update(movieListStore) },
+            click() { mylist.updateForce(movieListStore) },
         }));
 
         menu.popup({window: remote.getCurrentWindow()});
@@ -164,10 +167,13 @@ class MyListTreeItem extends Component {
             </div>
         ));
 
-        const progressView = mylist.updating ?
-            (<div className={classes.progress}>
-                <CircularProgress className={classes.progressIcon} thickness={8} size={30}/>
-            </div>) : <div />;
+
+        const total = mylist.movies.length;
+        const complete = mylist.updating ? 0 : total - mylist.updatingMovieCount;
+
+        const progressView = total === complete ? <div /> : (<div className={classes.progress}>
+                <LinearProgress className={classes.progressIcon} color="secondary" variant="determinate" value={(complete/total)*100} />
+            </div>);
 
         return (
             <div className={classes.container}
