@@ -30,20 +30,19 @@ storage.get(stateFileName, (error, data) => {
         stores = {
             root: RootStore.create({
                 mylists: MyListsStore.create(),
-                urlStore: UrlStore.create({url: "http://www.nicovideo.jp/mylist/56168136"}),
+                urlStore: UrlStore.create(),
                 historyStore: HistoryStore.create(),
                 singleMoviesStore: SingleMoviesStore.create(),
                 movieListStore: MovieListStore.create(),
                 movieIndex: IndexStore.create(),
                 contextStore: ContextStore.create({lastUpdatedAt: new Date()}),
+                snackMessageStore: MessageStore.create(),
             }),
-            urlMessageStore: MessageStore.create(),
         };
     } else {
         // from state file
         stores = {
             root: RootStore.create(data),
-            urlMessageStore: MessageStore.create(),
         }
     }
     // save state before close
@@ -65,6 +64,5 @@ storage.get(stateFileName, (error, data) => {
     );
 
 });
-
 
 
