@@ -8,11 +8,7 @@ import MovieStore from "./MovieStore";
 
 const axios = axiosBase.create({
     baseURL: 'http://www.nicovideo.jp',
-    headers: {
-        'ContentType': 'application/xml',
-        'X-Requested-With': 'XMLHttpRequest'
-    },
-    responseType: 'text'
+    // headerがあるとランキングが取得できなかった
 });
 
 
@@ -25,7 +21,7 @@ const MyListStore = types.model({
     showing: false,
 }).views(self => ({
     get url() {
-        return `http://www.nicovideo.jp/mylist/${self.id}`
+        return `http://www.nicovideo.jp/${self.id}`
     },
     get unwatchCount() {
         return self.movies.filter(m => !m.watched).length
@@ -44,7 +40,7 @@ const MyListStore = types.model({
         if (self.id && !self.updating) {
             self.setUpdating(true);
 
-            axios.get(`/mylist/${self.id}?rss=atom`).then(res => {
+            axios.get(`/${self.id}?rss=atom`).then(res => {
                 let xml = parseXml(res.data);
                 let feed = xml.children[0];
 

@@ -9,11 +9,11 @@ const MyListsStore = types.model({
 }).views(self => ({
 
     get(id_or_url) {
-        return self.lists.get(Util.normalizeMylistId(id_or_url));
+        return self.lists.get(Util.normalizeMylistOrRankingId(id_or_url));
     },
 
     has(id_or_url) {
-        return self.lists.has(Util.normalizeMylistId(id_or_url));
+        return self.lists.has(Util.normalizeMylistOrRankingId(id_or_url));
     },
 
     get reverse() {
@@ -41,7 +41,7 @@ const MyListsStore = types.model({
 })).actions(self => {
 
     function add(id_or_url, movieListStore) {
-        const id = Util.normalizeMylistId(id_or_url);
+        const id = Util.normalizeMylistOrRankingId(id_or_url);
 
         if(!self.lists.has(id)) {
             const mylist = MyListStore.create({id: id});
@@ -52,7 +52,7 @@ const MyListsStore = types.model({
     }
 
     function remove(id_or_url) {
-        const id = Util.normalizeMylistId(id_or_url);
+        const id = Util.normalizeMylistOrRankingId(id_or_url);
 
         if(self.showing && self.showing.id === id){
             self.showingIndex = -1;

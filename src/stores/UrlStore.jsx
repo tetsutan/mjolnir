@@ -2,11 +2,11 @@ import {types} from "mobx-state-tree"
 import Util from "../Util";
 
 const UrlStore = types.model({
-    url: types.string
+    url: "",
 }).views(self => ({
 
     get hasError() {
-        return self.url !== "" && !(Util.normalizeMovieId(self.url) || Util.normalizeMylistId(self.url))
+        return self.url !== "" && !(Util.normalizeMovieId(self.url) || Util.normalizeMylistOrRankingId(self.url))
     }
 
 }))

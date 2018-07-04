@@ -41,7 +41,7 @@ export default class AddingForm extends React.Component {
 
         // normalizeを使ってmylistかどうか判定
         const url = urlStore.url;
-        if(Util.normalizeMylistId(url)) {
+        if(Util.normalizeMylistOrRankingId(url)) {
 
             if(mylists.has(url)) {
                 // すでにある
