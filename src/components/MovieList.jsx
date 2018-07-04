@@ -117,6 +117,7 @@ class MovieList extends Component {
             movie.setWatched();
             historyStore.add(movie);
             ipcRenderer.send("open", movie.url);
+            root.snackMessageStore.setThenClear(`Opened [${movie.url}]`, 3)
         }
 
     }
@@ -140,7 +141,7 @@ class MovieList extends Component {
 
         menu.append(new MenuItem({
             label: 'Watch later',
-            click() { root.singleMoviesStore.addExistsMovie(movie) },
+            click() { root.addMovieToSingleMovies(movie) },
 
         }));
 

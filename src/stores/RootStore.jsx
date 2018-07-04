@@ -151,20 +151,24 @@ const RootStore = types.model({
 
     }
 
-    function addCurrentMovieToSingleMovies() {
-        const movie = self.currentMovie;
+    function addMovieToSingleMovies(movie) {
         if(movie) {
             self.singleMoviesStore.addExistsMovie(movie);
             self.snackMessageStore.setThenClear(`Add to Watch later [${movie.id}]`, 3)
         }
 
     }
+    function addCurrentMovieToSingleMovies() {
+        const movie = self.currentMovie;
+        addMovieToSingleMovies(movie);
+    }
 
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
-        deleteCurrent, addCurrentMovieToSingleMovies,
+        deleteCurrent,
+        addCurrentMovieToSingleMovies, addMovieToSingleMovies
     }
 });
 
