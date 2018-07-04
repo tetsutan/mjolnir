@@ -138,6 +138,12 @@ class MovieList extends Component {
             }));
         }
 
+        menu.append(new MenuItem({
+            label: 'Watch later',
+            click() { root.singleMoviesStore.addExistsMovie(movie) },
+
+        }));
+
         if(root.isShowingHistory || root.isShowingMovie) {
             menu.append(new MenuItem({
                 label: 'Remove',
