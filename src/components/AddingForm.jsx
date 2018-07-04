@@ -24,6 +24,8 @@ export default class AddingForm extends React.Component {
 
         this.handleClickAddButton = this.handleClickAddButton.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
+
+        this.addMulti = this.addMulti.bind(this);
     }
 
     static propTypes = {
@@ -40,7 +42,15 @@ export default class AddingForm extends React.Component {
 
         // normalizeを使ってmylistかどうか判定
         const url = urlStore.url;
-        if(Util.normalizeMylistOrRankingId(url)) {
+
+        // 複数かどうか
+        if(url.includes(",")) {
+            // 複数っぽいのでメッセージ出してバックグラウンドで複数追加
+            if(confirm("Added url contains multiple urls?")) {
+                this.addMulti(url)
+                urlStore.clear();
+            }
+        } else if(Util.normalizeMylistOrRankingId(url)) {
 
             if(mylists.has(url)) {
                 // すでにある
@@ -71,6 +81,60 @@ export default class AddingForm extends React.Component {
                 break;
         }
     }
+
+    addMulti(input) {
+        const {root} = this.props;
+        const {mylists, movieListStore, singleMoviesStore} = root;
+
+        const urls = input.split(',');
+
+        const checkUpdate = (item, next) => () => {
+            if(item.updating) {
+                setTimeout(checkUpdate(item, next), 200);
+            } else {
+                next()
+            }
+        };
+
+
+        const _add = (i) => () => {
+
+            if(i < urls.length) {
+                const _url = urls[i];
+                if(_url) {
+
+                    let item = null;
+                    if(Util.normalizeMylistOrRankingId(_url)) {
+                        mylists.add(_url, movieListStore);
+                        item = mylists.get(_url);
+                    } else if(Util.normalizeMovieId(_url)) {
+                        singleMoviesStore.add(_url, movieListStore);
+                        item = movieListStore.get(_url)
+                    }
+
+                    if(item){
+                        checkUpdate(item, () => {
+                            root.snackMessageStore.setThenClear(`Added [${item.id}]`, 3);
+                            setTimeout(_add(i+1), 100);
+                        })();
+                    } else {
+                        setTimeout(_add(i+1), 100);
+                    }
+
+                } else {
+                    setTimeout(_add(i+1), 100);
+                }
+            }
+            else {
+                // complete
+                root.snackMessageStore.setThenClear("Multi url added", 3);
+            }
+
+        };
+
+        _add(0)();
+    }
+
 
 
     render() {

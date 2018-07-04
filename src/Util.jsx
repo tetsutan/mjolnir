@@ -142,7 +142,13 @@ const Util = {
         if (targetEl) {
             return targetEl.children[0].text
         }
-    }
+    },
+
+    addMulti: function() {
+
+    },
+
+
 
 };
 

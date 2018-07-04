@@ -6,7 +6,12 @@ const UrlStore = types.model({
 }).views(self => ({
 
     get hasError() {
-        return self.url !== "" && !(Util.normalizeMovieId(self.url) || Util.normalizeMylistOrRankingId(self.url))
+
+        if(self.url === "") {
+            return false;
+        }
+
+        return !self.url.includes(',') && !Util.normalizeMovieId(self.url) && !Util.normalizeMylistOrRankingId(self.url)
     }
 
 }))
