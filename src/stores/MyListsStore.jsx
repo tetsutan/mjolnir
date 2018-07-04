@@ -48,6 +48,9 @@ const MyListsStore = types.model({
             mylist.update(movieListStore);
             self.lists.set(id, mylist);
             self.keys.unshift(id);
+            if(self.showing) {
+                self.showingIndex++;
+            }
         }
     }
 
