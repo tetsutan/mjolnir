@@ -15,7 +15,7 @@ const styles = theme => ({
 });
 
 @inject('root')
-@inject('urlMessageStore')
+@inject('snackMessageStore')
 @withStyles(styles)
 @observer
 export default class AddingForm extends React.Component {
@@ -32,7 +32,7 @@ export default class AddingForm extends React.Component {
     };
 
     handleClickAddButton(e) {
-        const { root, urlMessageStore } = this.props;
+        const { root, snackMessageStore } = this.props;
         const { urlStore, mylists, movieListStore, singleMoviesStore } = root;
 
         if(e){
@@ -45,19 +45,19 @@ export default class AddingForm extends React.Component {
 
             if(mylists.has(url)) {
                 // すでにある
-                urlMessageStore.set("Already in list");
-                urlMessageStore.clearAfter(5);
+                snackMessageStore.set("Already in list");
+                snackMessageStore.clearAfter(5);
                 urlStore.clear();
             } else {
                 mylists.add(url, movieListStore);
-                urlMessageStore.set("Added");
-                urlMessageStore.clearAfter(5);
+                snackMessageStore.set("Added");
+                snackMessageStore.clearAfter(5);
                 urlStore.clear()
             }
         } else if(Util.normalizeMovieId(url)) {
             singleMoviesStore.add(url, movieListStore);
-            urlMessageStore.set("Added");
-            urlMessageStore.clearAfter(5);
+            snackMessageStore.set("Added");
+            snackMessageStore.clearAfter(5);
             urlStore.clear();
         }
     }
@@ -75,13 +75,8 @@ export default class AddingForm extends React.Component {
 
 
     render() {
-        const { root, urlMessageStore, classes } = this.props;
+        const { root, classes } = this.props;
         const { urlStore } = root;
-
-        let err = <div />;
-        if (!urlMessageStore.empty) {
-            err = <Typography color="error">{urlMessageStore.message}</Typography>
-        }
 
         return <div>
             <TextField
@@ -99,7 +94,6 @@ export default class AddingForm extends React.Component {
             <IconButton color="inherit" aria-label="Add" onClick={this.handleClickAddButton} >
                 <AddCircleOutlineIcon />
             </IconButton>
-            {err}
 
         </div>
     }

@@ -5,9 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import { inject, observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
@@ -54,6 +52,7 @@ const styles = theme => ({
 
 });
 
+@inject('snackMessageStore')
 @withStyles(styles)
 @observer
 class ClippedDrawer extends React.Component {
@@ -63,7 +62,7 @@ class ClippedDrawer extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, snackMessageStore } = this.props;
 
         return <div className={classes.root}>
             <AppBar position="absolute" className={classes.appBar}>
@@ -89,6 +88,11 @@ class ClippedDrawer extends React.Component {
                 <div className={classes.toolbar} />
                 <MovieList />
             </main>
+            <Snackbar
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                open={!snackMessageStore.empty}
+                message={snackMessageStore.message}
+            />
         </div>
     }
 }
