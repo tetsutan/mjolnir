@@ -13,6 +13,11 @@ const MessageStore = types.model({
             self.message = m;
         }
 
+        function setThenClear(m, sec) {
+            self.set(m);
+            self.clearAfter(sec);
+        }
+
         function clear() {
             self.message = "";
         }
@@ -25,7 +30,7 @@ const MessageStore = types.model({
             }, sec * 1000);
         }
 
-        return {set, clear, clearAfter};
+        return {set, clear, clearAfter, setThenClear};
     });
 
 export default MessageStore;

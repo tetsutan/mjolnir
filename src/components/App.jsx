@@ -35,7 +35,7 @@ export default class App extends React.Component {
         Mousetrap.bind(['w'], root.toggleWatchedForCurrent);
         Mousetrap.bind(['r'], root.reloadCurrentMylist);
         Mousetrap.bind(['del'], root.deleteCurrent);
-        Mousetrap.bind(['p'], root.addMovieToSingleMovies);
+        Mousetrap.bind(['p'], root.addCurrentMovieToSingleMovies);
     }
 
     componentWillUnmount() {

@@ -15,7 +15,6 @@ const styles = theme => ({
 });
 
 @inject('root')
-@inject('snackMessageStore')
 @withStyles(styles)
 @observer
 export default class AddingForm extends React.Component {
@@ -32,8 +31,8 @@ export default class AddingForm extends React.Component {
     };
 
     handleClickAddButton(e) {
-        const { root, snackMessageStore } = this.props;
-        const { urlStore, mylists, movieListStore, singleMoviesStore } = root;
+        const { root } = this.props;
+        const { urlStore, mylists, movieListStore, singleMoviesStore, snackMessageStore } = root;
 
         if(e){
             e.preventDefault();

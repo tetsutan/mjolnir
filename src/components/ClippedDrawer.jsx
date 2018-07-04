@@ -52,7 +52,7 @@ const styles = theme => ({
 
 });
 
-@inject('snackMessageStore')
+@inject('root')
 @withStyles(styles)
 @observer
 class ClippedDrawer extends React.Component {
@@ -62,7 +62,8 @@ class ClippedDrawer extends React.Component {
     };
 
     render() {
-        const { classes, snackMessageStore } = this.props;
+        const { classes, root } = this.props;
+        const { snackMessageStore } = root;
 
         return <div className={classes.root}>
             <AppBar position="absolute" className={classes.appBar}>

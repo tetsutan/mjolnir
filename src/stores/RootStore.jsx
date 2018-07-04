@@ -9,6 +9,7 @@ import HistoryStore from "./HistoryStore";
 import MovieListStore from "./MovieListStore";
 import SingleMoviesStore from "./SingleMoviesStore";
 import ContextStore from "./ContextStore";
+import MessageStore from "./MessageStore";
 
 
 const RootStore = types.model({
@@ -20,6 +21,7 @@ const RootStore = types.model({
     singleMoviesStore: SingleMoviesStore,
     movieIndex: IndexStore,
     contextStore: ContextStore,
+    snackMessageStore: MessageStore,
 
 }).views(self => ({
     get isShowingHistory() {
@@ -149,10 +151,11 @@ const RootStore = types.model({
 
     }
 
-    function addMovieToSingleMovies() {
+    function addCurrentMovieToSingleMovies() {
         const movie = self.currentMovie;
         if(movie) {
             self.singleMoviesStore.addExistsMovie(movie);
+            self.snackMessageStore.setThenClear(`Add to Watch later [${movie.id}]`, 3)
         }
 
     }
@@ -161,7 +164,7 @@ const RootStore = types.model({
         moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
-        deleteCurrent, addMovieToSingleMovies,
+        deleteCurrent, addCurrentMovieToSingleMovies,
     }
 });
 
