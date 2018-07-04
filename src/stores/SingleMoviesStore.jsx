@@ -19,10 +19,14 @@ const SingleMoviesStore = types.model({
         // // const movieData = MovieStore.create({id: movieId});
         movieListStore.add(movieId);
         const movie = movieListStore.get(movieId);
-        self.movies.push(movie);
+        self.addExistsMovie(movie);
     }
 
     function addExistsMovie(movie) {
+        const index = self.movies.indexOf(movie);
+        if(index >= 0) {
+            self.movies.splice(index, 1)
+        }
         self.movies.push(movie);
     }
 

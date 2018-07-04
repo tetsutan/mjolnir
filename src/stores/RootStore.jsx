@@ -49,7 +49,7 @@ const RootStore = types.model({
     },
 
     get currentMovie() {
-        return self.currentMovies.get(self.movieIndex.index);
+        return self.currentMovies[self.movieIndex.index];
     },
 
 })).actions(self => {
