@@ -37,9 +37,9 @@ ipcMain.on('closed', e => {
         w.close();
     }
 
-    if (process.platform !== 'darwin') {
+    // if (process.platform !== 'darwin') {
         app.quit();
-    }
+    // }
 });
 
 ipcMain.on('openBackground', (ev, url) => {
