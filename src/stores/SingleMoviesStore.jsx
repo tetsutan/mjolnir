@@ -22,11 +22,15 @@ const SingleMoviesStore = types.model({
         self.movies.push(movie);
     }
 
+    function addExistsMovie(movie) {
+        self.movies.push(movie);
+    }
+
     function removeFromIndex(index) {
         self.movies.splice(index, 1) ;
     }
 
-    return {add, removeFromIndex}
+    return {add, removeFromIndex, addExistsMovie}
 });
 
 export default SingleMoviesStore;

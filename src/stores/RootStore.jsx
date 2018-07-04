@@ -149,11 +149,19 @@ const RootStore = types.model({
 
     }
 
+    function addMovieToSingleMovies() {
+        const movie = self.currentMovie;
+        if(movie) {
+            self.singleMoviesStore.addExistsMovie(movie);
+        }
+
+    }
+
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
-        deleteCurrent,
+        deleteCurrent, addMovieToSingleMovies,
     }
 });
 
