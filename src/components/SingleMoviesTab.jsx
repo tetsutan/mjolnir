@@ -57,7 +57,7 @@ class SingleMoviesTab extends Component {
                 [classes.listheader]: true,
             })}>
                 <MovieIcon />
-                <ListItemText primary="Single Movies" />
+                <ListItemText primary="Watch later" />
             </ListItem>
         );
     }
