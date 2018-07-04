@@ -27,6 +27,7 @@ const MovieStore = types.model({
 
     updating: false,
     watched: false,
+    deleted: false,
 
     // isLargeThumbnail: false, TODO
 }).views(self => ({
@@ -53,24 +54,32 @@ const MovieStore = types.model({
                 const xml = parseXml(res.data);
                 const nicovideo_thumb_response = xml.children[0];
 
-                if (nicovideo_thumb_response && nicovideo_thumb_response.children) {
+                if (nicovideo_thumb_response) {
 
-                    // find thumb
-                    let thumbEl = nicovideo_thumb_response.children.find(el => {
-                        return el.type === "element" && el.name === "thumb"
-                    });
+                    if(nicovideo_thumb_response.attributes && nicovideo_thumb_response.attributes.status === 'fail') {
+                        // deleted
+                        self.setDeleted();
+                    } else if(nicovideo_thumb_response.children) {
 
-                    if(thumbEl && thumbEl.children) {
+                        // find thumb
+                        let thumbEl = nicovideo_thumb_response.children.find(el => {
+                            return el.type === "element" && el.name === "thumb"
+                        });
 
-                        self.updateTitle(Util.xmlGetFirstChildrenText(thumbEl, "title"));
-                        self.updateThumbnailUrl(Util.xmlGetFirstChildrenText(thumbEl, "thumbnail_url"));
-                        self.updateUserName(Util.xmlGetFirstChildrenText(thumbEl, "user_nickname"));
-                        self.updateUserIcon(Util.xmlGetFirstChildrenText(thumbEl, "user_icon_url"));
-                        self.updateDate(Util.xmlGetFirstChildrenText(thumbEl, "first_retrieve"));
-                        self.updateDescription(Util.xmlGetFirstChildrenText(thumbEl, "description"));
-                        self.updateLength(Util.xmlGetFirstChildrenText(thumbEl, "length"));
+                        if(thumbEl && thumbEl.children) {
+
+                            self.updateTitle(Util.xmlGetFirstChildrenText(thumbEl, "title"));
+                            self.updateThumbnailUrl(Util.xmlGetFirstChildrenText(thumbEl, "thumbnail_url"));
+                            self.updateUserName(Util.xmlGetFirstChildrenText(thumbEl, "user_nickname"));
+                            self.updateUserIcon(Util.xmlGetFirstChildrenText(thumbEl, "user_icon_url"));
+                            self.updateDate(Util.xmlGetFirstChildrenText(thumbEl, "first_retrieve"));
+                            self.updateDescription(Util.xmlGetFirstChildrenText(thumbEl, "description"));
+                            self.updateLength(Util.xmlGetFirstChildrenText(thumbEl, "length"));
+
+                        }
 
                     }
+
 
                 }
 
@@ -122,12 +131,16 @@ const MovieStore = types.model({
     function toggleWatched() {
         self.watched = !self.watched
     }
+    function setDeleted() {
+        self.deleted = true;
+    }
+
 
     // private
 
     return {update, updateForce, updateTitle, updateThumbnailUrl,
         updateUserName, updateUserIcon, updateDate, updateDescription, updateLength,
-        setUpdating, setWatched, toggleWatched,
+        setUpdating, setWatched, toggleWatched, setDeleted,
     }
 });
 

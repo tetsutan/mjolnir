@@ -208,25 +208,32 @@ class MovieList extends Component {
                                             image={movie.thumbnailUrl}
                                         /> : <div className={classes.cover} />
                                     }
-                                    <div className={classes.details}>
-                                        <CardContent className={classes.content}>
-                                            <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
-                                            <div className={classes.author}>
-                                                <Avatar
-                                                    alt={movie.userName}
-                                                    src={movie.userIcon}
-                                                    className={classes.smallAvatar}
-                                                />
-                                                <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
-                                            </div>
-                                            <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
-                                            <div className={classes.dateList} >
-                                                <Typography className={classes.date} variant="caption" color="textSecondary">{movie.length}</Typography>
-                                                <Typography className={classes.date} variant="caption" color="textSecondary">-</Typography>
-                                                <Typography className={classes.date} variant="caption" color="textSecondary">{movie.date}</Typography>
-                                            </div>
 
-                                        </CardContent>
+                                    <div className={classes.details}>
+                                        {movie.deleted ?
+                                            <CardContent className={classes.content}>
+                                                <Typography variant="body2" color="textSecondary">Deleted id = {movie.id}</Typography>
+                                            </CardContent> :
+
+                                            <CardContent className={classes.content}>
+                                                <Typography variant="body2" color={this.watchedColor(movie)}>{movie.title}</Typography>
+                                                <div className={classes.author}>
+                                                    <Avatar
+                                                        alt={movie.userName}
+                                                        src={movie.userIcon}
+                                                        className={classes.smallAvatar}
+                                                    />
+                                                    <Typography variant="body1" color="textSecondary">{movie.userName}</Typography>
+                                                </div>
+                                                <Typography variant="caption" color="textSecondary">{movie.description}</Typography>
+                                                <div className={classes.dateList} >
+                                                    <Typography className={classes.date} variant="caption" color="textSecondary">{movie.length}</Typography>
+                                                    <Typography className={classes.date} variant="caption" color="textSecondary">-</Typography>
+                                                    <Typography className={classes.date} variant="caption" color="textSecondary">{movie.date}</Typography>
+                                                </div>
+
+                                            </CardContent>
+                                        }
                                     </div>
                                 </Card>
                             </ListItem>
