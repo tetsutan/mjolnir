@@ -2,7 +2,8 @@ import {types} from "mobx-state-tree"
 import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
 import Util from '../Util'
-import dateformat from 'dateformat'
+// import dateformat from 'dateformat'
+import dateFns from 'date-fns'
 
 const axios = axiosBase.create({
     baseURL: 'http://ext.nicovideo.jp',
@@ -21,7 +22,8 @@ const MovieStore = types.model({
     thumbnailUrl: "",
     userName: "",
     userIcon: "",
-    date: "",
+    date: types.maybe(types.Date),
+    dateS: "",
     description: "",
     length: "",
 
@@ -35,6 +37,34 @@ const MovieStore = types.model({
     get url() {
         return `http://www.nicovideo.jp/watch/${self.id}`
     },
+
+    get dateString() {
+        if(self.date) {
+            return dateFns.format(self.date, 'YYYY/MM/DD HH:mm:ss')
+        }
+        return self.dateS;
+    },
+
+    get dateType() {
+        if(self.date) {
+            const current = new Date();
+            const lastDay = dateFns.addDays(current, -1);
+            const lastWeek = dateFns.addWeeks(current, -1);
+            const lastMonth = dateFns.addMonths(current, -1);
+
+            if(dateFns.isAfter(self.date, lastDay)) {
+                return Util.DateType.DAY;
+            }
+            else if(dateFns.isAfter(self.date, lastWeek)) {
+                return Util.DateType.WEEK;
+            }
+            else if(dateFns.isAfter(self.date, lastMonth)) {
+                return Util.DateType.MONTH;
+            }
+
+        }
+        return Util.DateType.OLD;
+    }
 
 })).actions(self => {
 
@@ -109,9 +139,11 @@ const MovieStore = types.model({
     function updateDate(v) {
         const d = Date.parse(v);
         if(d) {
-            self.date = dateformat(d, 'yyyy/mm/dd HH:MM:ss')
+            self.date = d;
+            self.dateS = "";
         } else {
-            self.date = v;
+            self.date = null;
+            self.dateS = v;
         }
 
     }

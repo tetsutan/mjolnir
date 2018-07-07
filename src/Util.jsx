@@ -25,6 +25,12 @@ const Util = {
         ],
 
     },
+    DateType: {
+        DAY: 'DAY',
+        WEEK: 'WEEK',
+        MONTH: 'MONTH',
+        OLD: 'OLD',
+    },
 
     normalizeMylistOrRankingId: function(id_or_url){
 

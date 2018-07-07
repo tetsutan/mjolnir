@@ -15,6 +15,7 @@ import ListItem from '@material-ui/core/ListItem';
 
 import classNames from 'classnames';
 import Avatar from "@material-ui/core/Avatar";
+import Util from "../Util";
 
 const Menu = remote.Menu;
 const MenuItem = remote.MenuItem;
@@ -186,6 +187,12 @@ class MovieList extends Component {
 
         const movies = root.currentMovies;
 
+        const dateTypeToColorName = {
+            [Util.DateType.DAY]: 'secondary',
+            [Util.DateType.WEEK]: 'primary',
+            [Util.DateType.MONTH]: 'inherit',
+            [Util.DateType.OLD]: 'textSecondary',
+        };
 
         return (
             <div className={classes.list}>
@@ -236,7 +243,7 @@ class MovieList extends Component {
                                                 <div className={classes.dateList} >
                                                     <Typography className={classes.date} variant="caption" color="textSecondary">{movie.length}</Typography>
                                                     <Typography className={classes.date} variant="caption" color="textSecondary">-</Typography>
-                                                    <Typography className={classes.date} variant="caption" color="textSecondary">{movie.date}</Typography>
+                                                    <Typography className={classes.date} variant="caption" color={dateTypeToColorName[movie.dateType]}>{movie.dateString}</Typography>
                                                 </div>
 
                                             </CardContent>
