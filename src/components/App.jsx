@@ -43,7 +43,7 @@ export default class App extends React.Component {
         Mousetrap.bind(['shift+g'], root.moveToLastMovie);
         Mousetrap.bind(['g m'], root.moveToFirstMylist);
         Mousetrap.bind(['shift+m'], root.moveToLastMylist);
-        Mousetrap.bind(['g w'], () => {
+        Mousetrap.bind(['g l'], () => {
             movieIndex.clear();
             root.setShowingMovie();
 
