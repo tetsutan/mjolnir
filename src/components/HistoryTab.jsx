@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import HistoryIcon from '@material-ui/icons/History';
 
 import classNames from 'classnames';
+import {isAlive} from "mobx-state-tree";
 
 const Menu = remote.Menu;
 const MenuItem = remote.MenuItem;
@@ -44,6 +45,8 @@ class HistoryTab extends Component {
         super(props);
         this.handleClick = this.handleClick.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
+
+        this.scrollToSection = this.scrollToSection.bind(this);
     }
 
     handleClick(e) {
@@ -71,19 +74,32 @@ class HistoryTab extends Component {
         menu.popup({window: remote.getCurrentWindow()});
     }
 
+    scrollToSection(section) {
+        const { root } = this.props;
+        // dom element
+        if(isAlive(root) && root.isShowingHistory && section) {
+            section.scrollIntoView({block: "nearest"});
+        }
+    }
+
     render() {
         const { classes, root } = this.props;
         return (
-            <ListItem button
-                      onClick={this.handleClick}
-                      onContextMenu={this.handleContextMenu}
-                      className={classNames({
-                [classes.active]: root.isShowingHistory,
-                [classes.listheader]: true,
-            })}>
-                <HistoryIcon />
-                <ListItemText primary="History" />
-            </ListItem>
+            <div
+                ref={(section) => {
+                    this.scrollToSection(section);
+                }}>
+                <ListItem button
+                          onClick={this.handleClick}
+                          onContextMenu={this.handleContextMenu}
+                          className={classNames({
+                              [classes.active]: root.isShowingHistory,
+                              [classes.listheader]: true,
+                          })}>
+                    <HistoryIcon />
+                    <ListItemText primary="History" />
+                </ListItem>
+            </div>
         );
     }
 }

@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MovieIcon from '@material-ui/icons/Movie';
 
 import classNames from 'classnames';
+import {isAlive} from "mobx-state-tree";
 
 
 const styles = theme => ({
@@ -40,6 +41,8 @@ class SingleMoviesTab extends Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+
+        this.scrollToSection = this.scrollToSection.bind(this);
     }
 
     handleClick(e) {
@@ -49,16 +52,29 @@ class SingleMoviesTab extends Component {
         root.setShowingMovie();
     }
 
+    scrollToSection(section) {
+        const { root } = this.props;
+        // dom element
+        if(isAlive(root) && root.isShowingMovie && section) {
+            section.scrollIntoView({block: "nearest"});
+        }
+    }
+
     render() {
         const { classes, root } = this.props;
         return (
-            <ListItem button onClick={this.handleClick} className={classNames({
-                [classes.active]: root.isShowingMovie,
-                [classes.listheader]: true,
-            })}>
-                <MovieIcon />
-                <ListItemText primary="Watch later" />
-            </ListItem>
+            <div
+                ref={(section) => {
+                    this.scrollToSection(section);
+                }}>
+                <ListItem button onClick={this.handleClick} className={classNames({
+                    [classes.active]: root.isShowingMovie,
+                    [classes.listheader]: true,
+                })}>
+                    <MovieIcon />
+                    <ListItemText primary="Watch later" />
+                </ListItem>
+            </div>
         );
     }
 }
