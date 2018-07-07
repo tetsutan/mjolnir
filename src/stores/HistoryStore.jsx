@@ -1,5 +1,4 @@
 import {getSnapshot, types} from "mobx-state-tree"
-import MyListMovieData from "./MyListMovieData";
 import MovieStore from "./MovieStore";
 
 const HistoryStore = types.model({

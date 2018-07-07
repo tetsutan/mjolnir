@@ -34,7 +34,11 @@ const SingleMoviesStore = types.model({
         self.movies.splice(index, 1) ;
     }
 
-    return {add, removeFromIndex, addExistsMovie}
+    function clear() {
+        self.movies.clear()
+    }
+
+    return {add, removeFromIndex, addExistsMovie, clear}
 });
 
 export default SingleMoviesStore;

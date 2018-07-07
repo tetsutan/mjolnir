@@ -173,6 +173,22 @@ const RootStore = types.model({
 
     }
 
+    function deleteCurrentAll() {
+
+        if(self.isShowingHistory) {
+            if(confirm("delete all?")) {
+                self.historyStore.clear();
+            }
+
+        }
+        else if(self.isShowingMovie) {
+            if(confirm("delete all?")) {
+                self.singleMoviesStore.clear();
+            }
+        }
+
+    }
+
     function addMovieToSingleMovies(movie) {
         if(movie) {
             self.singleMoviesStore.addExistsMovie(movie);
@@ -191,7 +207,7 @@ const RootStore = types.model({
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         moveToFirstMovie, moveToLastMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
-        deleteCurrent,
+        deleteCurrent, deleteCurrentAll,
         addCurrentMovieToSingleMovies, addMovieToSingleMovies
     }
 });

@@ -52,6 +52,9 @@ export default class App extends React.Component {
             movieIndex.clear();
             root.setShowingHistory();
         });
+        Mousetrap.bind(['shift+del'], () => {
+            root.deleteCurrentAll();
+        });
     }
 
     componentWillUnmount() {

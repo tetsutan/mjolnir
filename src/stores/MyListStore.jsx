@@ -2,7 +2,6 @@ import {types} from "mobx-state-tree"
 import url from 'url';
 import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
-import MyListMovieData from "./MyListMovieData";
 import Util from '../Util'
 import MovieStore from "./MovieStore";
 
