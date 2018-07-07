@@ -52,6 +52,20 @@ const RootStore = types.model({
         return self.currentMovies[self.movieIndex.index];
     },
 
+    get moviesSize() {
+
+        if(self.mylists.showing && self.showType === Util.ShowType.MYLIST) {
+            return self.mylists.showing.movies.length;
+        } else {
+            if(self.showType === Util.ShowType.HISTORY) {
+                return self.historyStore.movies.length;
+            } else if(self.showType === Util.ShowType.MOVIE) {
+                return self.singleMoviesStore.movies.length;
+            }
+        }
+        return 0;
+    }
+
 })).actions(self => {
     function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;
@@ -83,6 +97,13 @@ const RootStore = types.model({
     function moveToPrevMovie(e) {
         self.moveToMovie(-1)
     }
+    function moveToFirstMovie(e) {
+        self.movieIndex.set(0);
+    }
+    function moveToLastMovie(e) {
+        const maxIndex = self.moviesSize -1;
+        self.movieIndex.set(maxIndex);
+    }
 
     function moveToMovie(offset) {
 
@@ -91,16 +112,7 @@ const RootStore = types.model({
         let nextIndex = currentIndex + offset;
         if(nextIndex < 0) { nextIndex = 0; }
 
-        let maxIndex = 0;
-        if(self.mylists.showing && self.showType === Util.ShowType.MYLIST) {
-            maxIndex = self.mylists.showing.movies.length-1
-        } else {
-            if(self.showType === Util.ShowType.HISTORY) {
-                maxIndex = self.historyStore.movies.length -1
-            } else if(self.showType === Util.ShowType.MOVIE) {
-                maxIndex = self.singleMoviesStore.movies.length -1
-            }
-        }
+        const maxIndex = self.moviesSize -1;
 
         if(maxIndex < nextIndex) { nextIndex = maxIndex; }
         self.movieIndex.set(nextIndex);
@@ -166,6 +178,7 @@ const RootStore = types.model({
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
+        moveToFirstMovie, moveToLastMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
         deleteCurrent,
         addCurrentMovieToSingleMovies, addMovieToSingleMovies
