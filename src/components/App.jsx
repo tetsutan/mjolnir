@@ -17,6 +17,8 @@ export default class App extends React.Component {
 
     componentDidMount() {
         const { root } = this.props;
+        const { movieIndex } = root;
+
         Mousetrap.bind(['s'], root.moveToNextMylist);
         Mousetrap.bind(['a'], root.moveToPrevMylist);
         Mousetrap.bind(['j'], root.moveToNextMovie);
@@ -39,6 +41,17 @@ export default class App extends React.Component {
         Mousetrap.bind(['p'], root.addCurrentMovieToSingleMovies);
         Mousetrap.bind(['g g'], root.moveToFirstMovie);
         Mousetrap.bind(['shift+g'], root.moveToLastMovie);
+        Mousetrap.bind(['g m'], root.moveToFirstMylist);
+        Mousetrap.bind(['shift+m'], root.moveToLastMylist);
+        Mousetrap.bind(['g w'], () => {
+            movieIndex.clear();
+            root.setShowingMovie();
+
+        });
+        Mousetrap.bind(['g h'], () => {
+            movieIndex.clear();
+            root.setShowingHistory();
+        });
     }
 
     componentWillUnmount() {

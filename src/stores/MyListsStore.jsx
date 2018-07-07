@@ -77,7 +77,7 @@ const MyListsStore = types.model({
         }
     }
 
-    function positionToMylist(offset) {
+    function moveToMylistIndex(offset) {
 
         // mylists.keys's index is reversed on view
         offset = -offset;
@@ -102,17 +102,28 @@ const MyListsStore = types.model({
 
             }
             else {
-                // reverse index
-                const nextIndex = 0;
+                positionToMylistIndex(0)
+            }
+        }
+    }
+
+    function positionToMylistIndex(nextIndex) {
+
+        if (self.length > 0) {
+
+            if(nextIndex !== self.showingIndex) {
 
                 const currentShowing = self.showing;
+
                 if(currentShowing) {
                     currentShowing.showing = false;
                 }
                 self.lists.get(self.keys[nextIndex]).showing = true;
                 self.showingIndex = nextIndex;
             }
+
         }
+
     }
 
     function setShowing(mylist) {
@@ -138,7 +149,7 @@ const MyListsStore = types.model({
         }
     }
 
-    return {add, remove, moveTo, positionToMylist, setShowing, clearShowingIndex}
+    return {add, remove, moveTo, moveToMylistIndex, positionToMylistIndex, setShowing, clearShowingIndex}
 });
 
 export default MyListsStore;

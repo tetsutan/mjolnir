@@ -81,12 +81,22 @@ const RootStore = types.model({
     }
 
     function moveToNextMylist(e) {
-        self.mylists.positionToMylist(-1);
+        self.mylists.moveToMylistIndex(-1);
         self.showType = Util.ShowType.MYLIST;
         self.movieIndex.clear();
     }
     function moveToPrevMylist(e) {
-        self.mylists.positionToMylist(1);
+        self.mylists.moveToMylistIndex(1);
+        self.movieIndex.clear();
+        self.showType = Util.ShowType.MYLIST;
+    }
+    function moveToFirstMylist(e) {
+        self.mylists.positionToMylistIndex(0);
+        self.movieIndex.clear();
+        self.showType = Util.ShowType.MYLIST;
+    }
+    function moveToLastMylist(e) {
+        self.mylists.positionToMylistIndex(self.mylists.length-1);
         self.movieIndex.clear();
         self.showType = Util.ShowType.MYLIST;
     }
@@ -177,6 +187,7 @@ const RootStore = types.model({
 
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
+        moveToFirstMylist, moveToLastMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         moveToFirstMovie, moveToLastMovie,
         toggleWatchedForCurrent, reloadCurrentMylist,
