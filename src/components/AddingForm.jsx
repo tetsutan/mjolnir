@@ -25,7 +25,11 @@ export default class AddingForm extends React.Component {
         this.handleClickAddButton = this.handleClickAddButton.bind(this);
         this.handleKeyPress = this.handleKeyPress.bind(this);
 
+        this.add = this.add.bind(this);
         this.addMulti = this.addMulti.bind(this);
+
+        this.setDomTextFiled = this.setDomTextFiled.bind(this);
+        this.blurTextField = this.blurTextField.bind(this);
     }
 
     static propTypes = {
@@ -33,12 +37,32 @@ export default class AddingForm extends React.Component {
     };
 
     handleClickAddButton(e) {
-        const { root } = this.props;
-        const { urlStore, mylists, movieListStore, singleMoviesStore, snackMessageStore } = root;
 
         if(e){
             e.preventDefault();
         }
+        this.add()
+
+    }
+
+    handleKeyPress(e) {
+        const ENTER = 13;
+
+        if(!e){
+            return;
+        }
+
+        switch(e.which) {
+            case ENTER:
+                this.add();
+                break;
+        }
+    }
+
+    add() {
+
+        const { root } = this.props;
+        const { urlStore, mylists, movieListStore, singleMoviesStore, snackMessageStore } = root;
 
         // normalizeを使ってmylistかどうか判定
         const url = urlStore.url;
@@ -47,7 +71,7 @@ export default class AddingForm extends React.Component {
         if(url.includes(",")) {
             // 複数っぽいのでメッセージ出してバックグラウンドで複数追加
             if(confirm("Added url contains multiple urls?")) {
-                this.addMulti(url)
+                this.addMulti(url);
                 urlStore.clear();
             }
         } else if(Util.normalizeMylistOrRankingId(url)) {
@@ -57,28 +81,20 @@ export default class AddingForm extends React.Component {
                 snackMessageStore.set("Already in list");
                 snackMessageStore.clearAfter(5);
                 urlStore.clear();
+                this.blurTextField();
             } else {
                 mylists.add(url, movieListStore);
                 snackMessageStore.set("Added");
                 snackMessageStore.clearAfter(5);
-                urlStore.clear()
+                urlStore.clear();
+                this.blurTextField();
             }
         } else if(Util.normalizeMovieId(url)) {
             singleMoviesStore.add(url, movieListStore);
             snackMessageStore.set("Added");
             snackMessageStore.clearAfter(5);
             urlStore.clear();
-        }
-    }
-
-    handleKeyPress(e) {
-        const ENTER = 13;
-
-        switch(e.which) {
-            case ENTER:
-                e.preventDefault();
-                this.handleClickAddButton();
-                break;
+            this.blurTextField();
         }
     }
 
@@ -135,6 +151,15 @@ export default class AddingForm extends React.Component {
         _add(0)();
     }
 
+    setDomTextFiled(section) {
+        this.domTextField = section;
+    }
+
+    blurTextField() {
+        if(this.domTextField) {
+            this.domTextField.blur();
+        }
+    }
 
 
     render() {
@@ -152,7 +177,9 @@ export default class AddingForm extends React.Component {
                 margin="normal"
                 className={classes.addingForm}
                 fullWidth={true}
-
+                inputRef={(section) => {
+                    this.setDomTextFiled(section);
+                }}
             />
             <IconButton color="inherit" aria-label="Add" onClick={this.handleClickAddButton} >
                 <AddCircleOutlineIcon />
