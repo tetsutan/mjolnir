@@ -5,12 +5,14 @@ import { inject, observer } from 'mobx-react';
 import {remote, ipcRenderer} from 'electron'
 
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import red from '@material-ui/core/colors/red';
+
+import LockIcon from '@material-ui/icons/Lock';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 import ClassNames from 'classnames';
 import {DragSource, DropTarget} from "react-dnd";
@@ -21,11 +23,14 @@ const MenuItem = remote.MenuItem;
 
 const styles = theme => ({
     container: {
-
-        position: 'relative'
+        position: 'relative',
+        padding: 0,
     },
     listItem: {
-        padding: 15,
+        padding: 10,
+    },
+    listItemText: {
+        padding: 0,
     },
     active: {
         backgroundColor: theme.palette.action.selected
@@ -44,6 +49,26 @@ const styles = theme => ({
     progressIcon: {
         width: '100%',
         height: '10px',
+    },
+    lock: {
+        flexGrow: 1,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'flex-start',
+        padding: '5px',
+        overflow: 'hidden',
+    },
+    lockable: {
+        opacity: "0.5",
+    },
+    lockButton: {
+        zIndex: 10,
+        position: 'absolute',
+        top: -10,
+        right: -10,
     },
 
 });
@@ -100,9 +125,18 @@ class MyListTreeItem extends Component {
 
     constructor(props) {
         super(props);
+
+        // internal state
+        this.state = {mouseover: false};
+
+
         this.handleClick = this.handleClick.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
+        this.handleLockChange = this.handleLockChange.bind(this);
+
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
 
         this.scrollToSection = this.scrollToSection.bind(this);
     }
@@ -118,8 +152,22 @@ class MyListTreeItem extends Component {
     }
 
     handleDoubleClick(e) {
-        const { root, mylist } = this.props;
+        const { mylist } = this.props;
         mylist.updateForce();
+    }
+
+    handleLockChange(e, checked) {
+        const { mylist } = this.props;
+        e.stopPropagation();
+        mylist.setLocked(checked);
+    }
+
+    handleMouseEnter(e) {
+        this.setState({mouseover: true})
+
+    }
+    handleMouseLeave(e) {
+        this.setState({mouseover: false})
     }
 
     handleContextMenu(e){
@@ -179,7 +227,7 @@ class MyListTreeItem extends Component {
 
         const dragView = connectDragSource(connectDropTarget(
             <div>
-                <ListItemText primary={mylist.title} secondary={mylist.author}
+                <ListItemText className={classes.listItemText} primary={mylist.title} secondary={mylist.author}
                               primaryTypographyProps={{variant: "body2", color: primaryColor}}
                               secondaryTypographyProps={{variant: "caption"}}
                 />
@@ -194,12 +242,31 @@ class MyListTreeItem extends Component {
                 <LinearProgress className={classes.progressIcon} color="secondary" variant="determinate" value={(complete/total)*100} />
             </div>);
 
+        const lockView = (mylist.locked || this.state.mouseover) ? (
+            <div className={classes.lock}>
+                <Checkbox
+                    checked={mylist.locked}
+                    onChange={this.handleLockChange}
+                    icon={<LockOpenIcon />}
+                    checkedIcon={<LockIcon />}
+                    className={ClassNames({
+                        [classes.lockButton]: true,
+                        [classes.lockable]: !(this.state.mouseover && mylist.locked),
+                        [classes.locked]: mylist.locked,
+                    })}
+                />
+            </div>
+        ) : <div />;
+
         return (
             <div className={classes.container}
+                 onMouseEnter={this.handleMouseEnter}
+                 onMouseLeave={this.handleMouseLeave}
                  ref={(section) => {
                      this.scrollToSection(section);
                  }}>
                 {progressView}
+                {lockView}
                 <ListItem button className={className}
                           onClick={this.handleClick}
                           onDoubleClick={this.handleDoubleClick}

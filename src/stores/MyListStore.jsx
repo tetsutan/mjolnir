@@ -20,6 +20,7 @@ const MyListStore = types.model({
     updating: false,
     showing: false,
     movieListStore: types.reference(MovieListStore),
+    locked: false,
 }).views(self => ({
     get url() {
         return `http://www.nicovideo.jp/${self.id}`
@@ -101,6 +102,10 @@ const MyListStore = types.model({
         self.updating = b;
     }
 
+    function setLocked(b) {
+        self.locked = b;
+    }
+
     // private
     function normalizeMyListTitle(title) {
         // 必ず `マイリスト` が頭につくので消す
@@ -117,7 +122,7 @@ const MyListStore = types.model({
         return title;
     }
 
-    return {update, updateForce, fetch, updateTitle, updateAuthor, updateMovies, setUpdating}
+    return {update, updateForce, fetch, updateTitle, updateAuthor, updateMovies, setUpdating, setLocked}
 });
 
 export default MyListStore;
