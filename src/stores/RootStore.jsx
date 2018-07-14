@@ -146,6 +146,13 @@ const RootStore = types.model({
         }
     }
 
+    function reloadAllMylist() {
+
+        self.mylists.reverse.forEach(mylist => {
+            mylist.updateForce();
+        });
+    }
+
     function deleteCurrent() {
 
         if (self.mylists.showingIndex !== -1) {
@@ -206,7 +213,7 @@ const RootStore = types.model({
         moveToFirstMylist, moveToLastMylist,
         moveToMovie, moveToNextMovie, moveToPrevMovie,
         moveToFirstMovie, moveToLastMovie,
-        toggleWatchedForCurrent, reloadCurrentMylist,
+        toggleWatchedForCurrent, reloadCurrentMylist, reloadAllMylist,
         deleteCurrent, deleteCurrentAll,
         addCurrentMovieToSingleMovies, addMovieToSingleMovies
     }

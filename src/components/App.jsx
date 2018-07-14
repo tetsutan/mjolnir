@@ -55,6 +55,9 @@ export default class App extends React.Component {
         Mousetrap.bind(['shift+del'], () => {
             root.deleteCurrentAll();
         });
+
+        Mousetrap.bind(['shift+r'], root.reloadAllMylist);
+
     }
 
     componentWillUnmount() {

@@ -53,13 +53,8 @@ class MyListTree extends Component {
     }
 
     handleReloadClick() {
-        const { classes, root } = this.props;
-        const { mylists } = root;
-
-        mylists.reverse.forEach(mylist => {
-            mylist.updateForce();
-        });
-
+        const { root } = this.props;
+        root.reloadAllMylist();
     }
 
     render() {
