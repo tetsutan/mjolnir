@@ -24,6 +24,9 @@ const RootStore = types.model({
     snackMessageStore: MessageStore,
 
 }).views(self => ({
+    get isShowingMylist() {
+        return self.showType === Util.ShowType.MYLIST;
+    },
     get isShowingHistory() {
         return self.showType === Util.ShowType.HISTORY;
     },

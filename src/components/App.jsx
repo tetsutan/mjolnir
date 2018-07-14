@@ -62,6 +62,22 @@ export default class App extends React.Component {
         });
 
         Mousetrap.bind(['shift+r'], root.reloadAllMylist);
+        Mousetrap.bind(['shift+o', 'shift+v'], (e) => {
+            console.log(e)
+            if(root.isShowingMylist) {
+                const mylist = root.mylists.showing;
+                if(mylist) {
+                    if(e.key === 'O') {
+                        ipcRenderer.send("open", mylist.url, true);
+                    }
+                    else {
+                        ipcRenderer.send("open", mylist.url);
+                    }
+                    root.snackMessageStore.setThenClear(`Opened [${mylist.url}]`, 3)
+
+                }
+            }
+        });
 
     }
 
