@@ -5,7 +5,7 @@ import MovieListStore from "./MovieListStore";
 
 const MyListsStore = types.model({
     lists: types.optional(types.map(MyListStore), {}), // not save order
-    keys: types.optional(types.array(types.string), []), // save order
+    _keys: types.optional(types.array(types.string), []), // save order without lock
     showingIndex: -1, // for keys
     movieListStore: types.reference(MovieListStore),
 }).views(self => ({
@@ -19,7 +19,7 @@ const MyListsStore = types.model({
     },
 
     get items() {
-        return self.keys.map(k => self.lists.get(k)).sort((a,b) => {
+        return self.keys.map(k => self.lists.get(k)).slice().sort((a,b) => {
             // lockされてたら前にもっていく
             if(a.locked === b.locked) {
                 return 0;
@@ -30,8 +30,20 @@ const MyListsStore = types.model({
         })
     },
 
+    get keys() {
+        return self._keys.sort((a,b) => {
+            a = self.lists.get(a);
+            b = self.lists.get(b);
+            if(a.locked === b.locked) {
+                return 0;
+            } else {
+                return a.locked ? -1 : 1;
+            }
+        })
+    },
+
     get length() {
-        return self.keys.length;
+        return self._keys.length;
     },
 
     get showing() {
@@ -57,7 +69,7 @@ const MyListsStore = types.model({
             const mylist = MyListStore.create({id: id, movieListStore: self.movieListStore});
             mylist.update();
             self.lists.set(id, mylist);
-            self.keys.unshift(id);
+            self._keys.unshift(id);
             if(self.showing) {
                 self.showingIndex++;
             }
@@ -73,30 +85,29 @@ const MyListsStore = types.model({
 
         self.lists.delete(id);
 
-        const index = self.keys.indexOf(id);
-        self.keys.splice(index, 1) ;
+        const index = self._keys.indexOf(id);
+        self._keys.splice(index, 1) ;
     }
 
     function moveTo(src, dst) {
-        const srcIndex = self.keys.indexOf(src);
-        const dstIndex = self.keys.indexOf(dst);
+        const srcIndex = self._keys.indexOf(src);
+        const dstIndex = self._keys.indexOf(dst);
 
         if(srcIndex >= 0 && dstIndex >= 0) {
-            self.keys.splice(srcIndex, 1);
-            self.keys.splice(dstIndex, 0, src)
+            self._keys.splice(srcIndex, 1);
+            self._keys.splice(dstIndex, 0, src)
         }
     }
 
     function moveToFirst(mylist) {
         const src = mylist.id;
-        const srcIndex = self.keys.indexOf(src);
+        const srcIndex = self._keys.indexOf(src);
         const dstIndex = 0;
 
         if(srcIndex >= 0 && dstIndex >= 0) {
-            self.keys.splice(srcIndex, 1);
-            self.keys.splice(dstIndex, 0, src)
+            self._keys.splice(srcIndex, 1);
+            self._keys.splice(dstIndex, 0, src)
         }
-        self.setShowing(mylist)
     }
 
     function moveToMylistIndex(offset) {
@@ -118,7 +129,8 @@ const MyListsStore = types.model({
                     if(currentShowing) {
                         currentShowing.showing = false;
                     }
-                    self.lists.get(self.keys[nextIndex]).showing = true;
+                    const nextKey = self.keys[nextIndex];
+                    self.lists.get(nextKey).showing = true;
                     self.showingIndex = nextIndex;
                 }
 
@@ -140,8 +152,10 @@ const MyListsStore = types.model({
                 if(currentShowing) {
                     currentShowing.showing = false;
                 }
-                self.lists.get(self.keys[nextIndex]).showing = true;
-                self.showingIndex = nextIndex;
+                const nextKey = self.keys[nextIndex];
+                const originalIndex = self._keys.indexOf(nextKey);
+                self.lists.get(nextKey).showing = true;
+                self.showingIndex = originalIndex;
             }
 
         }

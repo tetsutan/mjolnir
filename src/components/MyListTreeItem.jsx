@@ -160,13 +160,13 @@ class MyListTreeItem extends Component {
         const { root, mylist } = this.props;
         const { mylists } = root;
         e.stopPropagation();
+
+        mylists.clearShowingIndex();
         mylist.setLocked(checked);
         if(checked) {
             mylists.moveToFirst(mylist);
         }
-        else {
-            mylists.setShowing(mylist)
-        }
+        mylists.setShowing(mylist)
     }
 
     handleMouseEnter(e) {

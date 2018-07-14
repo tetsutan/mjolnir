@@ -109,6 +109,10 @@ const MyListStore = types.model({
         self.locked = !self.locked;
     }
 
+    function setShowing(b = true) {
+        self.showing = b;
+    }
+
     // private
     function normalizeMyListTitle(title) {
         // 必ず `マイリスト` が頭につくので消す
@@ -126,7 +130,7 @@ const MyListStore = types.model({
     }
 
     return {update, updateForce, fetch, updateTitle, updateAuthor, updateMovies, setUpdating,
-        setLocked, toggleLocked,
+        setLocked, toggleLocked, setShowing,
     }
 });
 

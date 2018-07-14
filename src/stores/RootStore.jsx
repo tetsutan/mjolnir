@@ -120,7 +120,6 @@ const RootStore = types.model({
 
     function moveToMovie(offset) {
 
-
         const currentIndex = self.movieIndex.index;
         let nextIndex = currentIndex + offset;
         if(nextIndex < 0) { nextIndex = 0; }
@@ -133,7 +132,7 @@ const RootStore = types.model({
     }
 
     function toggleWatchedForCurrent() {
-        const movie =self.currentMovie;
+        const movie = self.currentMovie;
         if(movie) {
             movie.toggleWatched()
         }
@@ -214,16 +213,16 @@ const RootStore = types.model({
     function lockCurrentMylist() {
         const mylist = self.mylists.showing;
         const current = mylist.locked;
+
         if(self.isShowingMylist && mylist) {
-            mylist.toggleLocked();
+            self.mylists.clearShowingIndex();
+            mylist.setLocked(!current);
+            if(!current) {
+                self.mylists.moveToFirst(mylist);
+            }
+            self.mylists.setShowing(mylist)
         }
 
-        if(!current) {
-            self.mylists.moveToFirst(mylist);
-        }
-        else {
-            self.mylists.setShowing(mylist);
-        }
     }
 
     return {setShowing, setShowingHistory, setShowingMovie,
