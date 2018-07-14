@@ -43,7 +43,7 @@ export default class App extends React.Component {
         Mousetrap.bind(['w'], root.toggleWatchedForCurrent);
         Mousetrap.bind(['r'], root.reloadCurrentMylist);
         Mousetrap.bind(['del'], root.deleteCurrent);
-        Mousetrap.bind(['p'], root.addCurrentMovieToSingleMovies);
+        Mousetrap.bind(['l'], root.addCurrentMovieToSingleMovies);
         Mousetrap.bind(['g g'], root.moveToFirstMovie);
         Mousetrap.bind(['shift+g'], root.moveToLastMovie);
         Mousetrap.bind(['g m'], root.moveToFirstMylist);
