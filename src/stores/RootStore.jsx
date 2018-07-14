@@ -211,6 +211,21 @@ const RootStore = types.model({
         addMovieToSingleMovies(movie);
     }
 
+    function lockCurrentMylist() {
+        const mylist = self.mylists.showing;
+        const current = mylist.locked;
+        if(self.isShowingMylist && mylist) {
+            mylist.toggleLocked();
+        }
+
+        if(!current) {
+            self.mylists.moveToFirst(mylist);
+        }
+        else {
+            self.mylists.setShowing(mylist);
+        }
+    }
+
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
         moveToFirstMylist, moveToLastMylist,
@@ -218,7 +233,8 @@ const RootStore = types.model({
         moveToFirstMovie, moveToLastMovie,
         toggleWatchedForCurrent, reloadCurrentMylist, reloadAllMylist,
         deleteCurrent, deleteCurrentAll,
-        addCurrentMovieToSingleMovies, addMovieToSingleMovies
+        addCurrentMovieToSingleMovies, addMovieToSingleMovies,
+        lockCurrentMylist,
     }
 });
 

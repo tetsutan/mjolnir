@@ -105,6 +105,9 @@ const MyListStore = types.model({
     function setLocked(b) {
         self.locked = b;
     }
+    function toggleLocked() {
+        self.locked = !self.locked;
+    }
 
     // private
     function normalizeMyListTitle(title) {
@@ -122,7 +125,9 @@ const MyListStore = types.model({
         return title;
     }
 
-    return {update, updateForce, fetch, updateTitle, updateAuthor, updateMovies, setUpdating, setLocked}
+    return {update, updateForce, fetch, updateTitle, updateAuthor, updateMovies, setUpdating,
+        setLocked, toggleLocked,
+    }
 });
 
 export default MyListStore;

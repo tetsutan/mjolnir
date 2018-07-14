@@ -30,7 +30,6 @@ export default class App extends React.Component {
                 movie.setWatched();
                 root.historyStore.add(movie);
                 if(e.key === 'o') {
-                    // ipcRenderer.send("openBackground", movie.url);
                     ipcRenderer.send("open", movie.url, true);
                 }
                 else {
@@ -78,6 +77,7 @@ export default class App extends React.Component {
                 }
             }
         });
+        Mousetrap.bind(['p'], root.lockCurrentMylist);
 
     }
 

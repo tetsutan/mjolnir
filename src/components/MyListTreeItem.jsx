@@ -162,7 +162,10 @@ class MyListTreeItem extends Component {
         e.stopPropagation();
         mylist.setLocked(checked);
         if(checked) {
-            mylists.moveToFirst(mylist.id);
+            mylists.moveToFirst(mylist);
+        }
+        else {
+            mylists.setShowing(mylist)
         }
     }
 

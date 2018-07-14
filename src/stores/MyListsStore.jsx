@@ -87,8 +87,8 @@ const MyListsStore = types.model({
         }
     }
 
-    function moveToFirst(mylistId) {
-        const src = mylistId
+    function moveToFirst(mylist) {
+        const src = mylist.id;
         const srcIndex = self.keys.indexOf(src);
         const dstIndex = 0;
 
@@ -96,6 +96,7 @@ const MyListsStore = types.model({
             self.keys.splice(srcIndex, 1);
             self.keys.splice(dstIndex, 0, src)
         }
+        self.setShowing(mylist)
     }
 
     function moveToMylistIndex(offset) {
