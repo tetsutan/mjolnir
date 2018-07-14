@@ -99,6 +99,7 @@ class MovieList extends Component {
         this.handleContextMenu = this.handleContextMenu.bind(this);
 
         this.scrollToSection = this.scrollToSection.bind(this);
+        this.openInBrowser = this.openInBrowser.bind(this);
     }
 
     handleClick(e, index) {
@@ -111,6 +112,12 @@ class MovieList extends Component {
         e.preventDefault();
         e.stopPropagation();
 
+        this.openInBrowser(movie)
+
+    }
+
+    openInBrowser(movie) {
+
         const { root } = this.props;
         const { historyStore } = root;
 
@@ -120,7 +127,6 @@ class MovieList extends Component {
             ipcRenderer.send("open", movie.url);
             root.snackMessageStore.setThenClear(`Opened [${movie.url}]`, 3)
         }
-
     }
 
     handleContextMenu(e, index, movie){
@@ -128,6 +134,15 @@ class MovieList extends Component {
         const { root } = this.props;
 
         const menu = new Menu();
+        menu.append(new MenuItem({
+            label: 'Open in browser',
+            click: () => {
+                this.openInBrowser(movie)
+                // ipcRenderer.send("open", movie.url);
+                // root.snackMessageStore.setThenClear(`Opened [${movie.url}]`, 3)
+            },
+        }));
+        menu.append(new MenuItem({type: 'separator'}));
         if(!movie.watched) {
             menu.append(new MenuItem({
                 label: 'Set watched',

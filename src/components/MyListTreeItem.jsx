@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
-import {remote} from 'electron'
+import {remote, ipcRenderer} from 'electron'
 
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -128,6 +128,14 @@ class MyListTreeItem extends Component {
         const { mylists } = root;
 
         const menu = new Menu();
+        menu.append(new MenuItem({
+            label: 'Open in browser',
+            click() {
+                ipcRenderer.send("open", mylist.url);
+                root.snackMessageStore.setThenClear(`Opened [${mylist.url}]`, 3)
+            },
+        }));
+        menu.append(new MenuItem({type: 'separator'}));
         menu.append(new MenuItem({
             label: 'Refresh',
             click() { mylist.updateForce() },
