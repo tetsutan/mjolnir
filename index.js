@@ -46,8 +46,8 @@ app.on('ready', () => {
 });
 
 
-ipcMain.on('open', (ev, url) => {
-    shell.openExternal(url);
+ipcMain.on('open', (ev, url, background=false) => {
+    shell.openExternal(url, {activate: !background});
 });
 
 ipcMain.on('closed', e => {
@@ -61,9 +61,5 @@ ipcMain.on('closed', e => {
     // if (process.platform !== 'darwin') {
         app.quit();
     // }
-});
-
-ipcMain.on('openBackground', (ev, url) => {
-    shell.openExternal(url, {activate: false});
 });
 

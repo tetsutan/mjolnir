@@ -23,13 +23,19 @@ export default class App extends React.Component {
         Mousetrap.bind(['a'], root.moveToPrevMylist);
         Mousetrap.bind(['j'], root.moveToNextMovie);
         Mousetrap.bind(['k'], root.moveToPrevMovie);
-        Mousetrap.bind(['o'], () => {
+        Mousetrap.bind(['o', 'v'], (e) => {
 
             const movie = root.currentMovie;
             if (movie) {
                 movie.setWatched();
                 root.historyStore.add(movie);
-                ipcRenderer.send("openBackground", movie.url);
+                if(e.key === 'o') {
+                    // ipcRenderer.send("openBackground", movie.url);
+                    ipcRenderer.send("open", movie.url, true);
+                }
+                else {
+                    ipcRenderer.send("open", movie.url);
+                }
                 root.snackMessageStore.setThenClear(`Opened [${movie.url}]`, 3)
             }
 
