@@ -62,7 +62,6 @@ export default class App extends React.Component {
 
         Mousetrap.bind(['shift+r'], root.reloadAllMylist);
         Mousetrap.bind(['shift+o', 'shift+v'], (e) => {
-            console.log(e)
             if(root.isShowingMylist) {
                 const mylist = root.mylists.showing;
                 if(mylist) {

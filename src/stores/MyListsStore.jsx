@@ -19,25 +19,20 @@ const MyListsStore = types.model({
     },
 
     get items() {
-        return self.keys.map(k => self.lists.get(k)).slice().sort((a,b) => {
-            // lockされてたら前にもっていく
-            if(a.locked === b.locked) {
-                return 0;
-            } else {
-                return a.locked ? -1 : 1;
-            }
-
-        })
+        return self.sortedInternal.map(d => d[0])
     },
 
     get keys() {
-        return self._keys.sort((a,b) => {
-            a = self.lists.get(a);
-            b = self.lists.get(b);
-            if(a.locked === b.locked) {
-                return 0;
+        return self.sortedInternal.map(d => d[2])
+    },
+    get sortedInternal() {
+        return self._keys.map((v, i) => [self.lists.get(v), i, v]).sort((a,b) => {
+            const a_value = a[0];
+            const b_value = b[0];
+            if(a_value.locked === b_value.locked) {
+                return a[1] - b[1]; // _keys's index
             } else {
-                return a.locked ? -1 : 1;
+                return a_value.locked ? -1 : 1;
             }
         })
     },
@@ -70,8 +65,10 @@ const MyListsStore = types.model({
             mylist.update();
             self.lists.set(id, mylist);
             self._keys.unshift(id);
-            if(self.showing) {
-                self.showingIndex++;
+
+            const showing = self.showing;
+            if(showing) {
+                self.setShowing(showing);
             }
         }
     }
@@ -153,9 +150,8 @@ const MyListsStore = types.model({
                     currentShowing.showing = false;
                 }
                 const nextKey = self.keys[nextIndex];
-                const originalIndex = self._keys.indexOf(nextKey);
                 self.lists.get(nextKey).showing = true;
-                self.showingIndex = originalIndex;
+                self.showingIndex = nextIndex;
             }
 
         }
