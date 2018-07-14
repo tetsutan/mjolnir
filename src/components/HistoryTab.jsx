@@ -62,12 +62,12 @@ class HistoryTab extends Component {
 
         const menu = new Menu();
         menu.append(new MenuItem({
-            label: 'Clear all',
-            click() { root.historyStore.clear() },
-        }));
-        menu.append(new MenuItem({
             label: 'Clear older 100',
             click() { root.historyStore.clearOlder(100) },
+        }));
+        menu.append(new MenuItem({
+            label: 'Clear all',
+            click() { root.historyStore.clear() },
         }));
 
         menu.popup({window: remote.getCurrentWindow()});

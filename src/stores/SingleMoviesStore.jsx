@@ -35,7 +35,11 @@ const SingleMoviesStore = types.model({
         self.movies.clear()
     }
 
-    return {add, removeFromIndex, addExistsMovie, clear}
+    function clearWatched() {
+        self.movies = self.movies.filter(movie => !movie.watched)
+    }
+
+    return {add, removeFromIndex, addExistsMovie, clear, clearWatched}
 });
 
 export default SingleMoviesStore;
