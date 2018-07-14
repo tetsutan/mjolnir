@@ -47,6 +47,11 @@ storage.get(stateFileName, (error, data) => {
             root: RootStore.create(data),
         }
     }
+
+    // clear message
+    stores.root.snackMessageStore.clear();
+    stores.root.urlStore.clear();
+
     // save state before close
     ipcRenderer.on("app-close", (ev) => {
         stores.root.contextStore.update();

@@ -29,7 +29,6 @@ export default class App extends React.Component {
             if (movie) {
                 movie.setWatched();
                 root.historyStore.add(movie);
-                // ipcRenderer.send("open", movie.url);
                 ipcRenderer.send("openBackground", movie.url);
                 root.snackMessageStore.setThenClear(`Opened [${movie.url}]`, 3)
             }
