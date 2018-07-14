@@ -2,7 +2,6 @@ import {types} from "mobx-state-tree"
 import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
 import Util from '../Util'
-// import dateformat from 'dateformat'
 import dateFns from 'date-fns'
 
 const axios = axiosBase.create({
@@ -15,8 +14,6 @@ const axios = axiosBase.create({
 });
 
 const MovieStore = types.model({
-    // url: "",
-    // movieId: "",
     id: types.identifier(types.string),
     title: "",
     thumbnailUrl: "",
@@ -98,13 +95,15 @@ const MovieStore = types.model({
 
                         if(thumbEl && thumbEl.children) {
 
-                            self.updateTitle(Util.xmlGetFirstChildrenText(thumbEl, "title"));
-                            self.updateThumbnailUrl(Util.xmlGetFirstChildrenText(thumbEl, "thumbnail_url"));
-                            self.updateUserName(Util.xmlGetFirstChildrenText(thumbEl, "user_nickname"));
-                            self.updateUserIcon(Util.xmlGetFirstChildrenText(thumbEl, "user_icon_url"));
-                            self.updateDate(Util.xmlGetFirstChildrenText(thumbEl, "first_retrieve"));
-                            self.updateDescription(Util.xmlGetFirstChildrenText(thumbEl, "description"));
-                            self.updateLength(Util.xmlGetFirstChildrenText(thumbEl, "length"));
+                            self.updateAttrs({
+                                title: Util.xmlGetFirstChildrenText(thumbEl, "title"),
+                                thumbnailUrl: Util.xmlGetFirstChildrenText(thumbEl, "thumbnail_url"),
+                                userName: Util.xmlGetFirstChildrenText(thumbEl, "user_nickname"),
+                                userIcon: Util.xmlGetFirstChildrenText(thumbEl, "user_icon_url"),
+                                date: Util.xmlGetFirstChildrenText(thumbEl, "first_retrieve"),
+                                description: Util.xmlGetFirstChildrenText(thumbEl, "description"),
+                                length: Util.xmlGetFirstChildrenText(thumbEl, "length"),
+                            });
 
                         }
 
@@ -121,6 +120,26 @@ const MovieStore = types.model({
                 self.setUpdating(false);
             });
 
+        }
+    }
+
+    // bulk update for speed
+    function updateAttrs(data) {
+        self.title = data.title;
+        self.thumbnailUrl = data.thumbnailUrl;
+        self.userName = data.userName;
+        self.userIcon = data.userIcon;
+        self.description = data.description;
+        self.length = data.length;
+
+        const v = data.date;
+        const d = Date.parse(v);
+        if(d) {
+            self.date = d;
+            self.dateS = "";
+        } else {
+            self.date = null;
+            self.dateS = v;
         }
     }
 
@@ -170,7 +189,7 @@ const MovieStore = types.model({
 
     // private
 
-    return {update, updateForce, updateTitle, updateThumbnailUrl,
+    return {update, updateAttrs, updateForce, updateTitle, updateThumbnailUrl,
         updateUserName, updateUserIcon, updateDate, updateDescription, updateLength,
         setUpdating, setWatched, toggleWatched, setDeleted,
     }

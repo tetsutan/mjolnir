@@ -62,11 +62,11 @@ const MyListStore = types.model({
                     });
 
                     if (linkEl) {
+                        const movieId = Util.normalizeMovieId(linkEl.attributes.href);
                         if(movieListStore) {
-                            const movieId = Util.normalizeMovieId(linkEl.attributes.href);
                             movieListStore.add(movieId);
-                            movies.push(movieId);
                         }
+                        movies.push(movieId);
                     }
 
                 });
