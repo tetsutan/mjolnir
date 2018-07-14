@@ -1,11 +1,13 @@
 import {types} from "mobx-state-tree"
 import MyListStore from "./MyListStore";
 import Util from "../Util";
+import MovieListStore from "./MovieListStore";
 
 const MyListsStore = types.model({
     lists: types.optional(types.map(MyListStore), {}), // not save order
     keys: types.optional(types.array(types.string), []), // save order
     showingIndex: -1, // for keys
+    movieListStore: types.reference(MovieListStore),
 }).views(self => ({
 
     get(id_or_url) {
@@ -40,12 +42,12 @@ const MyListsStore = types.model({
 
 })).actions(self => {
 
-    function add(id_or_url, movieListStore) {
+    function add(id_or_url) {
         const id = Util.normalizeMylistOrRankingId(id_or_url);
 
         if(!self.lists.has(id)) {
-            const mylist = MyListStore.create({id: id});
-            mylist.update(movieListStore);
+            const mylist = MyListStore.create({id: id, movieListStore: self.movieListStore});
+            mylist.update();
             self.lists.set(id, mylist);
             self.keys.unshift(id);
             if(self.showing) {

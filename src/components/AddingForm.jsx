@@ -62,7 +62,7 @@ export default class AddingForm extends React.Component {
     add() {
 
         const { root } = this.props;
-        const { urlStore, mylists, movieListStore, singleMoviesStore, snackMessageStore } = root;
+        const { urlStore, mylists, singleMoviesStore, snackMessageStore } = root;
 
         // normalizeを使ってmylistかどうか判定
         const url = urlStore.url;
@@ -83,14 +83,14 @@ export default class AddingForm extends React.Component {
                 urlStore.clear();
                 this.blurTextField();
             } else {
-                mylists.add(url, movieListStore);
+                mylists.add(url);
                 snackMessageStore.set("Added");
                 snackMessageStore.clearAfter(5);
                 urlStore.clear();
                 this.blurTextField();
             }
         } else if(Util.normalizeMovieId(url)) {
-            singleMoviesStore.add(url, movieListStore);
+            singleMoviesStore.add(url);
             snackMessageStore.set("Added");
             snackMessageStore.clearAfter(5);
             urlStore.clear();
@@ -121,10 +121,10 @@ export default class AddingForm extends React.Component {
 
                     let item = null;
                     if(Util.normalizeMylistOrRankingId(_url)) {
-                        mylists.add(_url, movieListStore);
+                        mylists.add(_url);
                         item = mylists.get(_url);
                     } else if(Util.normalizeMovieId(_url)) {
-                        singleMoviesStore.add(_url, movieListStore);
+                        singleMoviesStore.add(_url);
                         item = movieListStore.get(_url)
                     }
 

@@ -141,7 +141,7 @@ const RootStore = types.model({
         if (self.mylists.showingIndex !== -1) {
             const current = self.mylists.showing;
             if (current) {
-                current.updateForce(self.movieListStore)
+                current.updateForce()
             }
         }
     }

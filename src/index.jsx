@@ -27,17 +27,19 @@ storage.get(stateFileName, (error, data) => {
     let stores;
     if (Object.keys(data).length === 0) {
         // new
+        const movieListStore = MovieListStore.create({id: "movieListStore"});
         stores = {
             root: RootStore.create({
-                mylists: MyListsStore.create(),
+                mylists: MyListsStore.create({movieListStore: movieListStore}),
                 urlStore: UrlStore.create(),
                 historyStore: HistoryStore.create(),
-                singleMoviesStore: SingleMoviesStore.create(),
-                movieListStore: MovieListStore.create(),
+                singleMoviesStore: SingleMoviesStore.create({movieListStore: movieListStore}),
+                movieListStore: movieListStore,
                 movieIndex: IndexStore.create(),
                 contextStore: ContextStore.create({lastUpdatedAt: new Date()}),
                 snackMessageStore: MessageStore.create(),
             }),
+
         };
     } else {
         // from state file

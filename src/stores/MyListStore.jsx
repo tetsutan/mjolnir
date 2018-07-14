@@ -4,6 +4,7 @@ import axiosBase from 'axios';
 import parseXml from '@rgrove/parse-xml'
 import Util from '../Util'
 import MovieStore from "./MovieStore";
+import MovieListStore from "./MovieListStore";
 
 const axios = axiosBase.create({
     baseURL: 'http://www.nicovideo.jp',
@@ -18,6 +19,7 @@ const MyListStore = types.model({
     movies: types.optional(types.array(types.reference(MovieStore)), []),
     updating: false,
     showing: false,
+    movieListStore: types.reference(MovieListStore),
 }).views(self => ({
     get url() {
         return `http://www.nicovideo.jp/${self.id}`
@@ -30,12 +32,12 @@ const MyListStore = types.model({
     },
 })).actions(self => {
 
-    function updateForce(movieListStore) {
+    function updateForce() {
         self.updating = false;
-        self.update(movieListStore);
+        self.update();
     }
 
-    function update(movieListStore) {
+    function update() {
         if (self.id && !self.updating) {
             self.setUpdating(true);
 
@@ -63,9 +65,7 @@ const MyListStore = types.model({
 
                     if (linkEl) {
                         const movieId = Util.normalizeMovieId(linkEl.attributes.href);
-                        if(movieListStore) {
-                            movieListStore.add(movieId);
-                        }
+                        self.movieListStore.add(movieId);
                         movies.push(movieId);
                     }
 

@@ -59,7 +59,6 @@ class HistoryTab extends Component {
     handleContextMenu(e){
         e.preventDefault();
         const { root } = this.props;
-        // const { mylists, movieListStore} = root;
 
         const menu = new Menu();
         menu.append(new MenuItem({

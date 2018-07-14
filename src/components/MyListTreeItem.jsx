@@ -119,19 +119,18 @@ class MyListTreeItem extends Component {
 
     handleDoubleClick(e) {
         const { root, mylist } = this.props;
-        const { movieListStore } = root;
-        mylist.updateForce(movieListStore);
+        mylist.updateForce();
     }
 
     handleContextMenu(e){
         e.preventDefault();
         const { root, mylist } = this.props;
-        const { mylists, movieListStore} = root;
+        const { mylists } = root;
 
         const menu = new Menu();
         menu.append(new MenuItem({
             label: 'Refresh',
-            click() { mylist.updateForce(movieListStore) },
+            click() { mylist.updateForce() },
         }));
         menu.append(new MenuItem({type: 'separator'}));
         menu.append(new MenuItem({

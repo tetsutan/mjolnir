@@ -1,24 +1,21 @@
 import {types} from "mobx-state-tree"
 import MovieStore from "./MovieStore";
 import Util from "../Util";
+import MovieListStore from "./MovieListStore";
 
 const SingleMoviesStore = types.model({
     movies: types.optional(types.array(types.reference(MovieStore)), []),
+    movieListStore: types.reference(MovieListStore),
 }).views(self => ({
     get(index) {
         return self.movies[index];
     }
 })).actions(self => {
 
-    // function add(movie) {
-    //     self.movies.push(movie)
-    // }
-
-    function add(url, movieListStore) {
+    function add(url) {
         const movieId = Util.normalizeMovieId(url);
-        // // const movieData = MovieStore.create({id: movieId});
-        movieListStore.add(movieId);
-        const movie = movieListStore.get(movieId);
+        self.movieListStore.add(movieId);
+        const movie = self.movieListStore.get(movieId);
         self.addExistsMovie(movie);
     }
 
