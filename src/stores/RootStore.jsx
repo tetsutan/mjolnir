@@ -151,7 +151,7 @@ const RootStore = types.model({
 
     function reloadAllMylist() {
 
-        self.mylists.reverse.forEach(mylist => {
+        self.mylists.items.forEach(mylist => {
             mylist.updateForce();
         });
     }

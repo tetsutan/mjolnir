@@ -18,8 +18,16 @@ const MyListsStore = types.model({
         return self.lists.has(Util.normalizeMylistOrRankingId(id_or_url));
     },
 
-    get reverse() {
-        return self.keys.map(k => self.lists.get(k))
+    get items() {
+        return self.keys.map(k => self.lists.get(k)).sort((a,b) => {
+            // lockされてたら前にもっていく
+            if(a.locked === b.locked) {
+                return 0;
+            } else {
+                return a.locked ? -1 : 1;
+            }
+
+        })
     },
 
     get length() {
@@ -72,6 +80,17 @@ const MyListsStore = types.model({
     function moveTo(src, dst) {
         const srcIndex = self.keys.indexOf(src);
         const dstIndex = self.keys.indexOf(dst);
+
+        if(srcIndex >= 0 && dstIndex >= 0) {
+            self.keys.splice(srcIndex, 1);
+            self.keys.splice(dstIndex, 0, src)
+        }
+    }
+
+    function moveToFirst(mylistId) {
+        const src = mylistId
+        const srcIndex = self.keys.indexOf(src);
+        const dstIndex = 0;
 
         if(srcIndex >= 0 && dstIndex >= 0) {
             self.keys.splice(srcIndex, 1);
@@ -151,7 +170,7 @@ const MyListsStore = types.model({
         }
     }
 
-    return {add, remove, moveTo, moveToMylistIndex, positionToMylistIndex, setShowing, clearShowingIndex}
+    return {add, remove, moveTo, moveToFirst, moveToMylistIndex, positionToMylistIndex, setShowing, clearShowingIndex}
 });
 
 export default MyListsStore;

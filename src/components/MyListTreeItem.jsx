@@ -157,9 +157,13 @@ class MyListTreeItem extends Component {
     }
 
     handleLockChange(e, checked) {
-        const { mylist } = this.props;
+        const { root, mylist } = this.props;
+        const { mylists } = root;
         e.stopPropagation();
         mylist.setLocked(checked);
+        if(checked) {
+            mylists.moveToFirst(mylist.id);
+        }
     }
 
     handleMouseEnter(e) {
