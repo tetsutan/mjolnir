@@ -218,7 +218,7 @@ class MovieList extends Component {
                         <div key={index}
                              ref={(section) => {
                                  if(index === 0) {
-                                     root.setLimitTimer(500);
+                                     root.setLimitTimer(300);
                                  }
                                  if(movieIndex.is(index)){
                                      this.scrollToSection(section);
