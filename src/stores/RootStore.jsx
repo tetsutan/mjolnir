@@ -25,6 +25,7 @@ const RootStore = types.model({
 
 }).volatile(self => ({
     prevShowingId: "",
+    prevShowType: "",
 })).views(self => ({
 
     get isShowingMylist() {
@@ -59,16 +60,25 @@ const RootStore = types.model({
     // with action of setLimitTimer and react:ref
     get currentLimitedMovies() {
 
-        if(self.mylists.showing) {
-            if(self.prevShowingId && self.prevShowingId === self.mylists.showing.id) {
-                return self.currentMovies;
-            }
+        if(self.isShowLimitedMovies) {
             return self.currentMovies.slice(0, 5);
         }
-        else {
-            return self.currentMovies;
+        return self.currentMovies;
+
+    },
+
+    get isShowLimitedMovies() {
+        if(self.showType !== self.prevShowType) {
+            return true;
+        } else {
+            if(self.isShowingMylist && self.mylists.showing) {
+                if(!self.prevShowingId || self.prevShowingId !== self.mylists.showing.id) {
+                    return true;
+                }
+            }
         }
 
+        return false;
     },
 
     get currentMovie() {
@@ -253,14 +263,18 @@ const RootStore = types.model({
             clearTimeout(currentLimitTimer);
         }
 
-        if(self.mylists.showing && self.prevShowingId === self.mylists.showing.id) {
+        if(!self.isShowLimitedMovies) {
             return;
         }
+        // if(self.mylists.showing && self.prevShowingId === self.mylists.showing.id) {
+        //     return;
+        // }
 
-        currentLimitTimer = setTimeout(self.changeLimit, time);
+        currentLimitTimer = setTimeout(self.changePrev, time);
     }
 
-    function changeLimit() {
+    function changePrev() {
+        self.prevShowType = self.showType;
         if(self.mylists.showing) {
             self.prevShowingId = self.mylists.showing.id;
         }
@@ -275,7 +289,7 @@ const RootStore = types.model({
         deleteCurrent, deleteCurrentAll,
         addCurrentMovieToSingleMovies, addMovieToSingleMovies,
         lockCurrentMylist,
-        setLimitTimer, changeLimit,
+        setLimitTimer, changePrev,
     }
 });
 
