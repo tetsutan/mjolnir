@@ -200,7 +200,7 @@ class MovieList extends Component {
         const { classes, root } = this.props;
         const { movieIndex } = root;
 
-        const movies = root.currentMovies;
+        const movies = root.currentLimitedMovies;
 
         const dateTypeToColorName = {
             [Util.DateType.DAY]: 'secondary',
@@ -217,6 +217,9 @@ class MovieList extends Component {
                         // ref's element does not return with wrapped content (e.g. withStyles)
                         <div key={index}
                              ref={(section) => {
+                                 if(index === 0) {
+                                     root.setLimitTimer(500);
+                                 }
                                  if(movieIndex.is(index)){
                                      this.scrollToSection(section);
                                  }

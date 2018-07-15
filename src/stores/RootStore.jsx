@@ -23,7 +23,10 @@ const RootStore = types.model({
     contextStore: ContextStore,
     snackMessageStore: MessageStore,
 
-}).views(self => ({
+}).volatile(self => ({
+    prevShowingId: "",
+})).views(self => ({
+
     get isShowingMylist() {
         return self.showType === Util.ShowType.MYLIST;
     },
@@ -51,6 +54,23 @@ const RootStore = types.model({
 
     },
 
+    // first call: limited(5) movies
+    // second call: all movies
+    // with action of setLimitTimer and react:ref
+    get currentLimitedMovies() {
+
+        if(self.mylists.showing) {
+            if(self.prevShowingId && self.prevShowingId === self.mylists.showing.id) {
+                return self.currentMovies;
+            }
+            return self.currentMovies.slice(0, 5);
+        }
+        else {
+            return self.currentMovies;
+        }
+
+    },
+
     get currentMovie() {
         return self.currentMovies[self.movieIndex.index];
     },
@@ -70,6 +90,9 @@ const RootStore = types.model({
     }
 
 })).actions(self => {
+
+    let currentLimitTimer = null;
+
     function setShowing(mylist) {
         self.showType = Util.ShowType.MYLIST;
         self.mylists.setShowing(mylist)
@@ -225,6 +248,24 @@ const RootStore = types.model({
 
     }
 
+    function setLimitTimer(time) {
+        if(currentLimitTimer != null) {
+            clearTimeout(currentLimitTimer);
+        }
+
+        if(self.mylists.showing && self.prevShowingId === self.mylists.showing.id) {
+            return;
+        }
+
+        currentLimitTimer = setTimeout(self.changeLimit, time);
+    }
+
+    function changeLimit() {
+        if(self.mylists.showing) {
+            self.prevShowingId = self.mylists.showing.id;
+        }
+    }
+
     return {setShowing, setShowingHistory, setShowingMovie,
         moveToNextMylist, moveToPrevMylist,
         moveToFirstMylist, moveToLastMylist,
@@ -234,6 +275,7 @@ const RootStore = types.model({
         deleteCurrent, deleteCurrentAll,
         addCurrentMovieToSingleMovies, addMovieToSingleMovies,
         lockCurrentMylist,
+        setLimitTimer, changeLimit,
     }
 });
 
