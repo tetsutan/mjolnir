@@ -43,7 +43,7 @@ const RootStore = types.model({
             return self.singleMoviesStore.movies.slice().reverse();
         } else {
             if(self.mylists.showing) {
-                return self.mylists.showing.movies;
+                return self.mylists.currentMovies;
             }
         }
 

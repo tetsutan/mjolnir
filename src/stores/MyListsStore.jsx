@@ -55,6 +55,29 @@ const MyListsStore = types.model({
         return self.keys.indexOf(mylist.id) === self.showingIndex
     },
 
+    get currentMovies() {
+        if(self.showing){
+            return self.showing.movies;
+        }
+        return [];
+    },
+
+    nextIndex(offset) {
+        if(self.showingIndex !== -1) {
+            // find next
+            const currentIndex = self.showingIndex;
+            const maxIndex = self.length-1;
+            let nextIndex = currentIndex+offset;
+            if(nextIndex < 0){ nextIndex = 0 }
+            if(maxIndex < nextIndex) { nextIndex = maxIndex; }
+
+            return nextIndex;
+        }
+        else {
+            return 0
+        }
+    },
+
 })).actions(self => {
 
     function add(id_or_url) {
@@ -113,29 +136,22 @@ const MyListsStore = types.model({
         offset = -offset;
 
         if (self.length > 0) {
-            if(self.showingIndex !== -1) {
-                // find next
-                const currentIndex = self.showingIndex;
-                const maxIndex = self.length-1;
-                let nextIndex = currentIndex+offset;
-                if(nextIndex < 0){ nextIndex = 0 }
-                if(maxIndex < nextIndex) { nextIndex = maxIndex; }
+            const nextIndex = self.nextIndex(offset);
 
-                if(currentIndex !== nextIndex) {
-                    const currentShowing = self.showing;
-                    if(currentShowing) {
-                        currentShowing.showing = false;
-                    }
-                    const nextKey = self.keys[nextIndex];
-                    self.lists.get(nextKey).showing = true;
-                    self.showingIndex = nextIndex;
+            if(nextIndex !== self.showingIndex) {
+
+                const currentShowing = self.showing;
+
+                if(currentShowing) {
+                    currentShowing.showing = false;
                 }
+                const nextKey = self.keys[nextIndex];
+                self.lists.get(nextKey).showing = true;
+                self.showingIndex = nextIndex;
+            }
 
-            }
-            else {
-                positionToMylistIndex(0)
-            }
         }
+
     }
 
     function positionToMylistIndex(nextIndex) {
