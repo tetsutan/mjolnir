@@ -125,21 +125,41 @@ const MovieStore = types.model({
 
     // bulk update for speed
     function updateAttrs(data) {
-        self.title = data.title;
-        self.thumbnailUrl = data.thumbnailUrl;
-        self.userName = data.userName;
-        self.userIcon = data.userIcon;
-        self.description = data.description;
-        self.length = data.length;
+        if(self.title !== data.title) {
+            self.title = data.title;
+        }
+        if(self.thumbnailUrl !== data.thumbnailUrl) {
+            self.thumbnailUrl = data.thumbnailUrl;
+        }
+        if(self.userName !== data.userName) {
+            self.userName = data.userName;
+        }
+        if(self.userIcon !== data.userIcon) {
+            self.userIcon = data.userIcon;
+        }
+        if(self.description !== data.description) {
+            self.description = data.description;
+        }
+        if(self.length !== data.length) {
+            self.length = data.length;
+        }
 
         const v = data.date;
         const d = Date.parse(v);
         if(d) {
-            self.date = d;
-            self.dateS = "";
+            if(self.date !== d) {
+                self.date = d;
+            }
+            if(self.dateS !== "") {
+                self.dateS = "";
+            }
         } else {
-            self.date = null;
-            self.dateS = v;
+            if(self.date !== null) {
+                self.date = null;
+            }
+            if(self.dateS !== v) {
+                self.dateS = v;
+            }
         }
     }
 
