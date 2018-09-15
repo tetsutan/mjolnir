@@ -1,4 +1,4 @@
-# Mjolnil
+# Mjolnir
 
 ニコニコ動画マイリスト管理アプリ
 Inspired by NNDD ( https://ja.osdn.net/projects/nndd/ ) And LiveDowangoReader
