@@ -19,8 +19,17 @@
     "files": [
       "index.js",
       "src/index.html",
-      "dist/bundle.js"
-    ]
+      "dist/bundle.js",
+      "build/icon.icns"
+    ],
+    "mac": {
+      "icon": "build/icon.icns",
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.social-networking"
+    }
+
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
