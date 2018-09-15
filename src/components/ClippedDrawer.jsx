@@ -66,7 +66,7 @@ class ClippedDrawer extends React.Component {
         const { snackMessageStore } = root;
 
         return <div className={classes.root}>
-            <AppBar position="absolute" className={classes.appBar}>
+            <AppBar position="absolute" className={classes.appBar} color="default">
                 <Toolbar>
                     <Typography variant="title" color="inherit" noWrap className={classes.flex}>
                         mjolnir

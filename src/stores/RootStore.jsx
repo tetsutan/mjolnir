@@ -60,6 +60,10 @@ const RootStore = types.model({
     // with action of setLimitTimer and react:ref
     get currentLimitedMovies() {
 
+        if(self.isShowingMylist && self.mylists.showing && self.mylists.showing.updating) {
+            return []
+        }
+
         if(self.isShowLimitedMovies) {
             return self.currentMovies.slice(0, 5);
         }
