@@ -15,9 +15,9 @@ npm run release
 open dist/mjolnir-1.0.0.dmg
 ```
 
-# ScreenShot
-
 # KeyBinding
+
+See [App.jsx](https://github.com/tetsutan/mjolnir/blob/master/src/components/App.jsx)
 
 
 # Restriction
