@@ -77,7 +77,6 @@ const MyListStore = types.model({
 
 
             }).catch(e => {
-                console.log(e);
                 self.updateTitle("Error id=" + self.id);
                 self.setUpdating(false);
             });

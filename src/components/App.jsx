@@ -1,6 +1,7 @@
 
 import React from "react";
 // import storage from 'electron-json-storage';
+import PropTypes from 'prop-types';
 import { ipcRenderer } from 'electron'
 import { inject, observer } from 'mobx-react';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -9,11 +10,15 @@ import * as Mousetrap from 'mousetrap'
 
 @inject('root')
 @observer
-export default class App extends React.Component {
+class App extends React.Component {
 
     constructor(props) {
         super(props);
     }
+
+    static propTypes = {
+        root: PropTypes.object.isRequired,
+    };
 
     componentDidMount() {
         const { root } = this.props;
@@ -100,3 +105,4 @@ export default class App extends React.Component {
 
 
 
+export default App

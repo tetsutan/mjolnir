@@ -58,6 +58,7 @@ const styles = theme => ({
 class ClippedDrawer extends React.Component {
 
     static propTypes = {
+        root: PropTypes.object.isRequired,
         classes: PropTypes.object.isRequired,
     };
 

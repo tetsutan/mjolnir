@@ -115,7 +115,6 @@ const MovieStore = types.model({
                 self.setUpdating(false);
 
             }).catch(e => {
-                console.log(e);
                 self.updateTitle("Error id=" + self.id);
                 self.setUpdating(false);
             });

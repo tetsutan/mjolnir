@@ -223,7 +223,7 @@ class MyListTreeItem extends Component {
     }
 
     render() {
-        const { classes, mylist, isDragging, connectDragSource, connectDropTarget } = this.props;
+        const { classes, mylist, connectDragSource, connectDropTarget } = this.props;
 
         const className = ClassNames({
             [classes.listItem]: true,

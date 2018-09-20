@@ -17,7 +17,7 @@ const styles = theme => ({
 @inject('root')
 @withStyles(styles)
 @observer
-export default class AddingForm extends React.Component {
+class AddingForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,6 +34,7 @@ export default class AddingForm extends React.Component {
 
     static propTypes = {
         root: PropTypes.object.isRequired,
+        classes: PropTypes.object.isRequired,
     };
 
     handleClickAddButton(e) {
@@ -189,3 +190,4 @@ export default class AddingForm extends React.Component {
     }
 }
 
+export default AddingForm
