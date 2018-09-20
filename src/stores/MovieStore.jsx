@@ -14,7 +14,7 @@ const axios = axiosBase.create({
 });
 
 const MovieStore = types.model({
-    id: types.identifier(types.string),
+    id: types.identifier,
     title: "",
     thumbnailUrl: "",
     userName: "",

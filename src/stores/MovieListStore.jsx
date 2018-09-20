@@ -2,7 +2,7 @@ import {types} from "mobx-state-tree"
 import MovieStore from "./MovieStore";
 
 const MovieListStore = types.model({
-    id: types.identifier(types.string),
+    id: types.identifier,
     movies: types.optional(types.map(MovieStore), {}),
 }).views(self => ({
     get(movieId) {

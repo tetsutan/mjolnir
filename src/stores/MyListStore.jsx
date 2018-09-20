@@ -13,7 +13,7 @@ const axios = axiosBase.create({
 
 
 const MyListStore = types.model({
-    id: types.identifier(types.string),
+    id: types.identifier,
     title: types.optional(types.string, ""),
     author: "",
     movies: types.optional(types.array(types.reference(MovieStore)), []),
