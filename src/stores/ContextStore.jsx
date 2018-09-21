@@ -2,7 +2,7 @@ import {types} from "mobx-state-tree"
 
 const ContextStore = types.model({
     version: 1,
-    lastUpdatedAt: types.maybe(types.Date),
+    lastUpdatedAt: types.maybeNull(types.Date),
 }).views(self => ({
 })) .actions(self => {
     function update() {

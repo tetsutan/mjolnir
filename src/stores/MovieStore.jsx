@@ -19,7 +19,7 @@ const MovieStore = types.model({
     thumbnailUrl: "",
     userName: "",
     userIcon: "",
-    date: types.maybe(types.Date),
+    date: types.maybeNull(types.Date),
     dateS: "",
     description: "",
     length: "",
