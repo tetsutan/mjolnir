@@ -145,19 +145,22 @@ const MovieStore = types.model({
 
         const v = data.date;
         const d = Date.parse(v);
-        if(d) {
-            if(self.date !== d) {
-                self.date = d;
-            }
-            if(self.dateS !== "") {
-                self.dateS = "";
-            }
-        } else {
-            if(self.date !== null) {
-                self.date = null;
-            }
-            if(self.dateS !== v) {
-                self.dateS = v;
+        // date は毎回変わる
+        if(data.date !== null) {
+            if(d) {
+                if(self.date !== d) {
+                    self.date = d;
+                }
+                if(self.dateS !== "") {
+                    self.dateS = "";
+                }
+            } else {
+                if(self.date !== null) {
+                    self.date = null;
+                }
+                if(self.dateS !== v) {
+                    self.dateS = v;
+                }
             }
         }
     }
