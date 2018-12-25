@@ -98,7 +98,6 @@ class MovieList extends Component {
         this.watchedColor = this.watchedColor.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
 
-        this.scrollToSection = this.scrollToSection.bind(this);
         this.openInBrowser = this.openInBrowser.bind(this);
     }
 
@@ -181,13 +180,6 @@ class MovieList extends Component {
         menu.popup({window: remote.getCurrentWindow()});
     }
 
-    scrollToSection(section) {
-        // dom element
-        if(section) {
-            section.scrollIntoView({block: "nearest"});
-        }
-    }
-
     watchedColor(movie) {
         if(movie.watched) {
             return "textSecondary";
@@ -215,13 +207,16 @@ class MovieList extends Component {
 
                     {movies.map((movie,index) =>
                         // ref's element does not return with wrapped content (e.g. withStyles)
+
                         <div key={index}
                              ref={(section) => {
                                  if(index === 0) {
                                      root.setLimitTimer(300);
                                  }
                                  if(movieIndex.is(index)){
-                                     this.scrollToSection(section);
+                                     if(section) {
+                                         section.scrollIntoView({block: "nearest"});
+                                     }
                                  }
                              }}>
                             <ListItem
