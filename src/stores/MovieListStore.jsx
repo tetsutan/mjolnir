@@ -15,10 +15,10 @@ const MovieListStore = types.model({
             self.movies.set(movieId, movie);
             movie.update();
         }
-        else {
-            const movie = self.movies.get(movieId);
-            movie.updateForce();
-        }
+        // else {
+        //     const movie = self.movies.get(movieId);
+        //     movie.updateForce();
+        // }
 
     }
     return {add}

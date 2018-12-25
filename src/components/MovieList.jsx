@@ -234,12 +234,13 @@ class MovieList extends Component {
                                 <Card className={classNames({
                                     [classes.card]: true,
                                     [classes.cardSelected]: movieIndex.is(index),
-                                })} >
-                                    {movie.thumbnailUrl ? <CardMedia
-                                            className={classes.cover}
-                                            image={movie.thumbnailUrl}
-                                        /> : <div className={classes.cover} />
-                                    }
+                                })}
+                                >
+
+                                    {movie.thumbnailUrl ? <img
+                                    className={classes.cover}
+                                    src={movie.thumbnailUrl}
+                                    /> : <div className={classes.cover} />}
 
                                     <div className={classes.details}>
                                         {movie.deleted ?

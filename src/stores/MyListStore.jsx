@@ -66,7 +66,6 @@ const MyListStore = types.model({
 
                     if (linkEl) {
                         const movieId = Util.normalizeMovieId(linkEl.attributes.href);
-                        self.movieListStore.add(movieId);
                         movies.push(movieId);
                     }
 
@@ -77,6 +76,7 @@ const MyListStore = types.model({
 
 
             }).catch(e => {
+                console.log(e)
                 self.updateTitle("Error id=" + self.id);
                 self.setUpdating(false);
             });
@@ -94,6 +94,19 @@ const MyListStore = types.model({
     }
 
     function updateMovies(movies) {
+
+        // is already added?
+        movies.forEach((m) => {
+            const found = !!self.movies.find((m2) => {
+                return m === m2.id
+            } );
+
+            if (!found) {
+                self.movieListStore.add(m);
+            }
+        });
+
+
         self.movies = movies
     }
 
